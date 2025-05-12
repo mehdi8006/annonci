@@ -584,15 +584,15 @@
             </div>
         </div>
 
-        <!-- Barre de recherche -->
-        <div class="search-container">
-            <div class="search-bar">
-                <input type="text" placeholder="Rechercher..." aria-label="Rechercher des annonces" />
-                <button type="submit">
-                    <i class="fa-solid fa-search"></i>
-                </button>
-            </div>
-        </div>
+        <!-- Search form in nav.blade.php -->
+<div class="search-container">
+    <form action="{{ route('process-nav-search') }}" method="GET" class="search-bar">
+        <input type="text" name="search_term" placeholder="Rechercher..." aria-label="Rechercher des annonces" />
+        <button type="submit">
+            <i class="fa-solid fa-search"></i>
+        </button>
+    </form>
+</div>
     </div>
 
     <!-- Actions (boutons de connexion et publication) -->

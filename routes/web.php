@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
-use app\Http\Controllers\SearchController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,5 +45,10 @@ Route::delete('/member/favoris/remove/{id}', [App\Http\Controllers\MemberControl
 
 //nnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaaaavvvvvvvvvvvvvvvvvvvvbbbbbaaaaaarrrrrrrrre
 
+// Search Routes
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/advanced-search', [SearchController::class, 'advancedSearch'])->name('advanced-search');
 Route::get('/categories/{categorie}', [SearchController::class, 'byCategorie'])->name('annonces.by.categorie');
 Route::get('/villes/{ville}', [SearchController::class, 'byVille'])->name('annonces.by.ville');
+Route::get('/process-nav-search', [SearchController::class, 'processNavSearch'])->name('process-nav-search');
+Route::get('/api/categories/{categorie}/sous-categories', [SearchController::class, 'getSubcategories'])->name('api.subcategories');
