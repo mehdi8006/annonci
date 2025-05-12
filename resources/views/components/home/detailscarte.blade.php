@@ -498,7 +498,7 @@
             margin-right: 8px;
         }
     </style>
-@props(['userAds','ads'])
+@props(['userAds','ads','isFavorite'])
     <div class="container4">
         <div class="product-detail4">
             @foreach ( $ads as $ad )
@@ -506,31 +506,27 @@
            
             <div class="product-top4">
                 <div class="product-gallery4">
-                @foreach($ad->images as $image)
-                    @if($image->principale == 1)
-                        <img rc="{{ asset($image->url) }}" alt="Main product image" class="main-image4">
-                        @endif
-                          <div class="thumbnail-container4">
-                        @if($ad->images->count() > 0)
-                            <img src="{{ asset('storage/' . $ad->images[0]->url) }}" alt="Thumbnail 1" class="thumbnail4 active">
-                        @endif
-                        @if($ad->images->count() > 1)
-                            <img url="{{ asset( 'storage/' . $ad->images[1]->url) }}" alt="Thumbnail 2" class="thumbnail4">
-                        @endif
-                        @if($ad->images->count() > 2)
-                            <img url="{{ asset('storage/' . $ad->images[2]->url) }}" alt="Thumbnail 3" class="thumbnail4">
-                        @endif
-                        @if(isset($ad->images[3]->url))
-                            <img url="{{ asset('storage/' . $ad->images[3]->url) }}" alt="Thumbnail 4" class="thumbnail4">
-                        @endif
-                        @if(isset($ad->images[4]->url))
-                            <img url="{{ asset('storage/' . $ad->images[4]->url) }}" alt="Thumbnail 5" class="thumbnail4">
-                        @endif  
-                    </div>
-                    
-                
-                @endforeach                    
-                       
+               <!-- In the product-gallery4 section, fixing the main image src attribute -->
+@foreach($ad->images as $image)
+    @if($image->principale == 1)
+        <img src="{{ asset('storage/' . $image->url) }}" alt="Main product image" class="main-image4">
+        @endif
+        @endforeach
+          <div class="thumbnail-container4">
+        @if($ad->images->count() > 0)
+            <img src="{{ asset('storage/' . $ad->images[0]->url) }}" alt="Thumbnail 1" class="thumbnail4 active">
+        @endif
+        @if($ad->images->count() > 1)
+            <img src="{{ asset('storage/' . $ad->images[1]->url) }}" alt="Thumbnail 2" class="thumbnail4">
+        @endif
+        @if($ad->images->count() > 2)
+            <img src="{{ asset('storage/' . $ad->images[2]->url) }}" alt="Thumbnail 3" class="thumbnail4">
+        @endif
+         @if($ad->images->count() > 3)
+            <img src="{{ asset('storage/' . $ad->images[3]->url) }}" alt="Thumbnail 3" class="thumbnail4">
+        @endif
+      
+    </div>
                 </div>
                 
                 <div class="product-info4">
@@ -572,12 +568,21 @@
                                 <i class="fas fa-phone"></i> {{ $ad->utilisateur->telephon }}
                             </div>
                         </div>
+                        @if ($isFavorite)
+                          <a href="#favorite">
+                            <button class="favorite-button4 active">
+                                <i class="far fa-heart"></i>
+                                Ajouter aux favoris
+                            </button>
+                        </a>   
+                        @else
                         <a href="#favorite">
                             <button class="favorite-button4">
                                 <i class="far fa-heart"></i>
                                 Ajouter aux favoris
                             </button>
                         </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -634,23 +639,7 @@
             }
             
             // Favorite button click handler
-            const favoriteBtn = document.querySelector('.favorite-button4');
-            if (favoriteBtn) {
-                favoriteBtn.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    const icon = this.querySelector('i');
-                    if (this.classList.contains('active')) {
-                        icon.classList.remove('far');
-                        icon.classList.add('fas');
-                        this.innerHTML = '<i class="fas fa-heart"></i> Ajouté aux favoris';
-                    } else {
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                        this.innerHTML = '<i class="far fa-heart"></i> Ajouter aux favoris';
-                    }
-                });
-            }
-            
+          
             // Thumbnail click handler for changing main image
             const thumbnails = document.querySelectorAll('.thumbnail4');
             const mainImage = document.querySelector('.main-image4');

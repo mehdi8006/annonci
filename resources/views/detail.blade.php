@@ -9,7 +9,7 @@
 <body>
    @extends('layouts.masterhome') 
    @section('main')
-   <x-home.detailscarte :userAds="$userAds" :ads="$detailsAds"  />   
+   <x-home.detailscarte :userAds="$userAds" :ads="$detailsAds" :isFavorite="$isFavorite" />   
    @endsection
 </body>
 </html>

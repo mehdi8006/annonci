@@ -1,3 +1,5 @@
+<!-- File: resources/views/search/results.blade.php -->
+
 @extends('layouts.app')
 
 @section('content')
@@ -83,75 +85,8 @@
         @endif
         
         @if(count($annonces) > 0)
-            <div class="products-grid2">
-                @foreach($annonces as $annonce)
-                    <div class="product-card2">
-                        <div class="card-header2">
-                            <div class="user-section2">
-                                <div class="user-avatar2">
-                                    <i class="fa-solid fa-user avatar-icon2"></i>
-                                </div>
-                                <div class="user-details2">
-                                    <span class="username2">{{ $annonce->utilisateur->nom }}</span>
-                                    <span class="timestamp2">
-                                        <i class="fa-solid fa-clock"></i>
-                                        {{ $annonce->created_at->diffForHumans() }}
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            @if(session()->has('user_id'))
-                                <form action="{{ route('member.favoris.add', $annonce->id) }}" method="POST" class="favorite-form">
-                                    @csrf
-                                    <button type="submit" class="favorite-btn2 {{ $annonce->favorites->where('id_utilisateur', session('user_id'))->count() > 0 ? 'active' : '' }}" aria-label="Ajouter aux favoris">
-                                        <i class="fa-solid fa-heart"></i>
-                                    </button>
-                                </form>
-                            @else
-                                <a href="{{ route('form') }}" class="favorite-btn2" aria-label="Ajouter aux favoris">
-                                    <i class="fa-solid fa-heart"></i>
-                                </a>
-                            @endif
-                        </div>
-
-                        <a href="{{ route('details', $annonce->id) }}">
-                            <div class="product-image2" style="background-image: url('{{ $annonce->images->first() ? asset($annonce->images->first()->url) : '/api/placeholder/380/240' }}')"></div>
-                        </a>
-
-                        <div class="product-details2">
-                            <div class="location2">
-                                <i class="fa-solid fa-location-dot"></i>
-                                {{ $annonce->categorie->nom }} dans {{ $annonce->ville->nom }}
-                            </div>
-                            
-                            <h2 class="product-title2">{{ $annonce->titre }}</h2>
-                            
-                            <div class="price2">
-                                {{ number_format($annonce->prix, 0, ',', ' ') }}<span class="currency2">DH</span>
-                            </div>
-
-                            <div class="categories2">
-                                <span class="category-tag2">
-                                    <i class="fa-solid fa-layer-group"></i>
-                                    {{ $annonce->categorie->nom }}
-                                </span>
-                                
-                                @if($annonce->sousCategorie)
-                                <span class="category-tag2">
-                                    <i class="fa-solid fa-tag"></i>
-                                    {{ $annonce->sousCategorie->nom }}
-                                </span>
-                                @endif
-                                
-                                <span class="category-tag2">
-                                    <i class="fa-solid fa-map-marker-alt"></i>
-                                    {{ $annonce->ville->nom }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+            <!-- Use our new component to display search results -->
+            <x-search.results-card :annonces="$annonces" />
             
             <div class="mt-4">
                 {{ $annonces->links() }}
@@ -201,33 +136,6 @@
                 }
             });
         }
-        
-        // Handle favorite button clicks with AJAX
-        const favoriteForms = document.querySelectorAll('.favorite-form');
-        
-        favoriteForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const button = this.querySelector('.favorite-btn2');
-                const formAction = this.getAttribute('action');
-                
-                fetch(formAction, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        button.classList.toggle('active');
-                    }
-                })
-                .catch(error => console.error('Error toggling favorite:', error));
-            });
-        });
     });
 </script>
 @endsection
