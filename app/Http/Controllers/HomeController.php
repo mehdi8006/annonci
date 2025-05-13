@@ -1,58 +1,59 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Annonce;
 use App\Models\Categorie;
 use App\Models\Favorite;
-use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-  
     public function homeshow(){
-    // Annonces récentes
-    $recentAds = Annonce::orderBy('date_publication', 'desc')
-        ->with(['images', 'utilisateur', 'ville'])
-        ->take(10)
-        ->get();
-
-    // 4 catégories aléatoires
-    $randCategories = Categorie::inRandomOrder()->take(4)->get();
-
-    // Annonces par catégorie
-    $categoryAds = [];
-    foreach ($randCategories as $category) {
-        $ads = Annonce::where('id_categorie', $category->id)
-            ->with(['images', 'utilisateur', 'ville', 'categorie'])
+        // Annonces récentes
+        $recentAds = Annonce::orderBy('date_publication', 'desc')
+            ->with(['images', 'utilisateur', 'ville'])
             ->take(10)
             ->get();
 
-        $categoryAds[$category->id] = [
-            'category' => $category,
-            'ads' => $ads
-        ];
-    }
+        // 4 catégories aléatoires
+        $randCategories = Categorie::inRandomOrder()->take(4)->get();
 
-    // Envoyer les données à la vue
-    return view('home', compact('recentAds', 'categoryAds'));
-}
+        // Annonces par catégorie
+        $categoryAds = [];
+        foreach ($randCategories as $category) {
+            $ads = Annonce::where('id_categorie', $category->id)
+                ->with(['images', 'utilisateur', 'ville', 'categorie'])
+                ->take(10)
+                ->get();
+
+            $categoryAds[$category->id] = [
+                'category' => $category,
+                'ads' => $ads
+            ];
+        }
+
+        // Envoyer les données à la vue
+        return view('home', compact('recentAds', 'categoryAds'));
+    }
 
     public function detailshow($id){
         $detailsAds = Annonce::where('id', $id)
-        ->with(['images','categorie','utilisateur','ville','souscategorie'])
-        ->get();
+            ->with(['images','categorie','utilisateur','ville','souscategorie'])
+            ->get();
+            
         foreach($detailsAds as $ad){
             $userAds = Annonce::where('id_utilisateur', $ad->id_utilisateur)
-            ->with(['images','utilisateur','ville',])
-            ->take(10)
-            ->get();   
+                ->with(['images','utilisateur','ville',])
+                ->take(10)
+                ->get();   
         }
         
         $isFavorite = false;
-        if (Auth::check()) {
-            $userId = Auth::id();
+        // Check if user is logged in using session
+        if (Session::has('user_id')) {
+            $userId = Session::get('user_id');
             $isFavorite = Favorite::where('id_utilisateur', $userId)
                 ->where('id_annonce', $id)
                 ->exists();
@@ -67,11 +68,11 @@ class HomeController extends Controller
     public function addToFavorites($id)
     {
         // Vérifier si l'utilisateur est connecté
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour ajouter des favoris');
+        if (!Session::has('user_id')) {
+            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour ajouter des favoris');
         }
 
-        $userId = Auth::user()->id;
+        $userId = Session::get('user_id');
         
         // Vérifier si l'annonce existe
         $annonce = Annonce::find($id);
@@ -103,11 +104,11 @@ class HomeController extends Controller
     public function removeFromFavorites($id)
     {
         // Vérifier si l'utilisateur est connecté
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour gérer vos favoris');
+        if (!Session::has('user_id')) {
+            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour gérer vos favoris');
         }
 
-        $userId = Auth::user()->id;
+        $userId = Session::get('user_id');
         
         // Trouver et supprimer le favori
         $favorite = Favorite::where('id_utilisateur', $userId)
@@ -128,11 +129,11 @@ class HomeController extends Controller
     public function showFavorites()
     {
         // Vérifier si l'utilisateur est connecté
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour voir vos favoris');
+        if (!Session::has('user_id')) {
+            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour voir vos favoris');
         }
 
-        $userId = Auth::user()->id;
+        $userId = Session::get('user_id');
         
         // Récupérer tous les favoris de l'utilisateur avec les détails des annonces
         $favorites = Favorite::where('id_utilisateur', $userId)

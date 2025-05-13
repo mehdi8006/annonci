@@ -44,11 +44,7 @@ Route::post('/member/favoris/add/{id}', [App\Http\Controllers\MemberController::
 Route::delete('/member/favoris/remove/{id}', [App\Http\Controllers\MemberController::class, 'removeFavorite'])->name('member.favoris.remove');
 
 //nnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaaaavvvvvvvvvvvvvvvvvvvvbbbbbaaaaaarrrrrrrrre
+Route::post('/favorites/add/{id}', [HomeController::class, 'addToFavorites'])->name('favorites.add');
+Route::delete('/favorites/remove/{id}', [HomeController::class, 'removeFromFavorites'])->name('favorites.remove');
+Route::get('/favorites', [HomeController::class, 'showFavorites'])->name('favorites');
 
-// Search Routes
-Route::get('/search', [SearchController::class, 'search'])->name('search');
-Route::get('/advanced-search', [SearchController::class, 'advancedSearch'])->name('advanced-search');
-Route::get('/categories/{categorie}', [SearchController::class, 'byCategorie'])->name('annonces.by.categorie');
-Route::get('/villes/{ville}', [SearchController::class, 'byVille'])->name('annonces.by.ville');
-Route::get('/process-nav-search', [SearchController::class, 'processNavSearch'])->name('process-nav-search');
-Route::get('/api/categories/{categorie}/sous-categories', [SearchController::class, 'getSubcategories'])->name('api.subcategories');

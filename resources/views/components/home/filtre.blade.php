@@ -1,6 +1,14 @@
-<style>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche d'Annonces</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
     .search-container {
         max-width: 1200px;
+        margin: 0 auto;
     }
 
     .search-bar-container {
@@ -119,7 +127,7 @@
         border: 1px solid #e5e7eb;
         border-radius: 12px;
         padding: 20px;
-        margin-top: 15px;
+        margin-bottom: 20px;
         animation: slideDown 0.3s ease-out;
     }
 
@@ -197,6 +205,40 @@
         cursor: pointer;
     }
 
+    /* Styles pour les boutons de tri */
+    .sort-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding: 0 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-sort {
+        background-color: #f3f4f6;
+        color: #4b5563;
+        padding: 8px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+    }
+
+    .btn-sort:hover {
+        background-color: #e5e7eb;
+    }
+
+    .btn-sort.active {
+        background-color: #dbeafe;
+        color: #2563eb;
+        border-color: #93c5fd;
+    }
+
     @keyframes slideDown {
         from {
             opacity: 0;
@@ -216,44 +258,50 @@
         .search-input-group, .location-select-group {
             width: 100%;
         }
+
+        .sort-buttons {
+            justify-content: center;
+        }
     }
-</style>
+    </style>
+</head>
+<body>
 
 <div class="search-container">
-    <form method="GET" action="{{ route('category', ['category' => request()->category ?? '']) }}">
+    <form id="searchForm">
         <!-- Barre de recherche principale -->
         <div class="search-bar-container">
             <div class="search-input-group">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" name="keywords" class="search-input" placeholder="Rechercher des annonces..." value="{{ request('keywords') }}">
+                <input type="text" name="keywords" class="search-input" placeholder="Rechercher des annonces...">
             </div>
             
             <div class="location-select-group">
                 <i class="fa-solid fa-location-dot location-icon"></i>
                 <select name="ville" class="location-select">
                     <option value="">Toutes les villes</option>
-                    <option value="casablanca" {{ request('ville') == 'casablanca' ? 'selected' : '' }}>Casablanca</option>
-                    <option value="rabat" {{ request('ville') == 'rabat' ? 'selected' : '' }}>Rabat</option>
-                    <option value="marrakech" {{ request('ville') == 'marrakech' ? 'selected' : '' }}>Marrakech</option>
-                    <option value="fes" {{ request('ville') == 'fes' ? 'selected' : '' }}>Fès</option>
-                    <option value="agadir" {{ request('ville') == 'agadir' ? 'selected' : '' }}>Agadir</option>
-                    <option value="tanger" {{ request('ville') == 'tanger' ? 'selected' : '' }}>Tanger</option>
-                    <option value="meknes" {{ request('ville') == 'meknes' ? 'selected' : '' }}>Meknès</option>
-                    <option value="oujda" {{ request('ville') == 'oujda' ? 'selected' : '' }}>Oujda</option>
-                    <option value="kenitra" {{ request('ville') == 'kenitra' ? 'selected' : '' }}>Kénitra</option>
-                    <option value="tetouan" {{ request('ville') == 'tetouan' ? 'selected' : '' }}>Tétouan</option>
-                    <option value="safi" {{ request('ville') == 'safi' ? 'selected' : '' }}>Safi</option>
-                    <option value="elhoceima" {{ request('ville') == 'elhoceima' ? 'selected' : '' }}>El Hoceima</option>
-                    <option value="nador" {{ request('ville') == 'nador' ? 'selected' : '' }}>Nador</option>
-                    <option value="settat" {{ request('ville') == 'settat' ? 'selected' : '' }}>Settat</option>
-                    <option value="jadida" {{ request('ville') == 'jadida' ? 'selected' : '' }}>El Jadida</option>
-                    <option value="ouarzazate" {{ request('ville') == 'ouarzazate' ? 'selected' : '' }}>Ouarzazate</option>
-                    <option value="dakhla" {{ request('ville') == 'dakhla' ? 'selected' : '' }}>Dakhla</option>
-                    <option value="laayoune" {{ request('ville') == 'laayoune' ? 'selected' : '' }}>Laâyoune</option>
+                    <option value="casablanca">Casablanca</option>
+                    <option value="rabat">Rabat</option>
+                    <option value="marrakech">Marrakech</option>
+                    <option value="fes">Fès</option>
+                    <option value="agadir">Agadir</option>
+                    <option value="tanger">Tanger</option>
+                    <option value="meknes">Meknès</option>
+                    <option value="oujda">Oujda</option>
+                    <option value="kenitra">Kénitra</option>
+                    <option value="tetouan">Tétouan</option>
+                    <option value="safi">Safi</option>
+                    <option value="elhoceima">El Hoceima</option>
+                    <option value="nador">Nador</option>
+                    <option value="settat">Settat</option>
+                    <option value="jadida">El Jadida</option>
+                    <option value="ouarzazate">Ouarzazate</option>
+                    <option value="dakhla">Dakhla</option>
+                    <option value="laayoune">Laâyoune</option>
                 </select>
             </div>
             
-            <button type="button" class="btn-advanced-filter" onclick="toggleAdvancedFilter()">
+            <button type="button" class="btn-advanced-filter" id="toggleFiltersBtn">
                 <i class="fa-solid fa-sliders"></i>
                 Filtres avancés
             </button>
@@ -265,21 +313,34 @@
         </div>
 
         <!-- Panneau de filtres avancés (caché par défaut) -->
+        <!-- Moved above the sort buttons as requested -->
         <div id="advancedFilterPanel" class="advanced-filter-panel">
+            <input type="hidden" name="advanced" value="" id="advancedInput">
+            <input type="hidden" name="sort" value="" id="sortInput">
+            
             <div class="advanced-filter-grid">
                 <!-- Catégorie -->
                 <div class="filter-group">
                     <label class="filter-label">Catégorie</label>
-                    <select name="categorie" class="filter-select">
+                    <select name="categorie" class="filter-select" id="categorieSelect">
                         <option value="">Toutes les catégories</option>
-                        <option value="immobilier" {{ request('categorie') == 'immobilier' ? 'selected' : '' }}>Immobilier</option>
-                        <option value="vehicules" {{ request('categorie') == 'vehicules' ? 'selected' : '' }}>Véhicules</option>
-                        <option value="electronique" {{ request('categorie') == 'electronique' ? 'selected' : '' }}>Électronique</option>
-                        <option value="maison" {{ request('categorie') == 'maison' ? 'selected' : '' }}>Maison</option>
-                        <option value="vetements" {{ request('categorie') == 'vetements' ? 'selected' : '' }}>Vêtements</option>
-                        <option value="animaux" {{ request('categorie') == 'animaux' ? 'selected' : '' }}>Animaux</option>
-                        <option value="sport" {{ request('categorie') == 'sport' ? 'selected' : '' }}>Sport</option>
-                        <option value="autres" {{ request('categorie') == 'autres' ? 'selected' : '' }}>Autres</option>
+                        <option value="immobilier">Immobilier</option>
+                        <option value="vehicules">Véhicules</option>
+                        <option value="electronique">Électronique</option>
+                        <option value="maison">Maison</option>
+                        <option value="vetements">Vêtements</option>
+                        <option value="animaux">Animaux</option>
+                        <option value="sport">Sport</option>
+                        <option value="autres">Autres</option>
+                    </select>
+                </div>
+                
+                <!-- Sous-catégorie -->
+                <div class="filter-group">
+                    <label class="filter-label">Sous-catégorie</label>
+                    <select name="sous_categorie" class="filter-select" id="sousCategorieSelect">
+                        <option value="">Toutes les sous-catégories</option>
+                        <!-- Sera rempli dynamiquement par JavaScript -->
                     </select>
                 </div>
 
@@ -287,20 +348,10 @@
                 <div class="filter-group">
                     <label class="filter-label">Prix (DH)</label>
                     <div class="price-range">
-                        <input type="number" name="prix_min" class="filter-input" placeholder="Min" min="0" value="{{ request('prix_min') }}">
+                        <input type="number" name="prix_min" class="filter-input" placeholder="Min" min="0">
                         <span class="price-separator">à</span>
-                        <input type="number" name="prix_max" class="filter-input" placeholder="Max" min="0" value="{{ request('prix_max') }}">
+                        <input type="number" name="prix_max" class="filter-input" placeholder="Max" min="0">
                     </div>
-                </div>
-
-                <!-- Type de vente -->
-                <div class="filter-group">
-                    <label class="filter-label">Type de vente</label>
-                    <select name="type_vente" class="filter-select">
-                        <option value="">Tous les types</option>
-                        <option value="offre" {{ request('type_vente') == 'offre' ? 'selected' : '' }}>Offres</option>
-                        <option value="demande" {{ request('type_vente') == 'demande' ? 'selected' : '' }}>Demandes</option>
-                    </select>
                 </div>
             </div>
 
@@ -308,27 +359,195 @@
                 <button type="submit" class="btn-apply">
                     <i class="fa-solid fa-check"></i> Appliquer
                 </button>
-                <button type="button" class="btn-reset" onclick="resetFilters()">
+                <button type="button" class="btn-reset" id="resetBtn">
                     <i class="fa-solid fa-rotate-right"></i> Réinitialiser
                 </button>
             </div>
+        </div>
+
+        <!-- Boutons de tri (now after the advanced filter panel) -->
+        <div class="sort-buttons">
+            <button type="button" class="btn-sort" data-sort="recent">
+                <i class="fa-solid fa-clock"></i> Plus récent
+            </button>
+            <button type="button" class="btn-sort" data-sort="cher">
+                <i class="fa-solid fa-arrow-up-wide-short"></i> Plus cher
+            </button>
+            <button type="button" class="btn-sort" data-sort="moins_cher">
+                <i class="fa-solid fa-arrow-down-wide-short"></i> Moins cher
+            </button>
         </div>
     </form>
 </div>
 
 <script>
-function toggleAdvancedFilter() {
-    const panel = document.getElementById('advancedFilterPanel');
-    panel.classList.toggle('show');
+// Mapping des sous-catégories par catégorie
+const subCategories = {
+    'immobilier': [
+        {id: 'appartements', name: 'Appartements'},
+        {id: 'maisons', name: 'Maisons et Villas'},
+        {id: 'bureaux', name: 'Bureaux et Commerces'},
+        {id: 'terrains', name: 'Terrains'},
+        {id: 'locations', name: 'Locations vacances'}
+    ],
+    'vehicules': [
+        {id: 'voitures', name: 'Voitures'},
+        {id: 'motos', name: 'Motos'},
+        {id: 'camions', name: 'Camions'},
+        {id: 'pieces', name: 'Pièces et Accessoires'}
+    ],
+    'electronique': [
+        {id: 'telephones', name: 'Téléphones'},
+        {id: 'ordinateurs', name: 'Ordinateurs'},
+        {id: 'tv', name: 'TV et Écrans'},
+        {id: 'photo', name: 'Photo et Caméras'},
+        {id: 'jeux', name: 'Consoles et Jeux vidéo'}
+    ],
+    'maison': [
+        {id: 'meubles', name: 'Meubles'},
+        {id: 'electromenager', name: 'Électroménager'},
+        {id: 'decoration', name: 'Décoration'},
+        {id: 'jardin', name: 'Jardin et Bricolage'}
+    ],
+    'vetements': [
+        {id: 'homme', name: 'Homme'},
+        {id: 'femme', name: 'Femme'},
+        {id: 'enfant', name: 'Enfant'},
+        {id: 'accessoires', name: 'Accessoires et Bijoux'}
+    ],
+    'animaux': [
+        {id: 'chiens', name: 'Chiens'},
+        {id: 'chats', name: 'Chats'},
+        {id: 'oiseaux', name: 'Oiseaux'},
+        {id: 'autres_animaux', name: 'Autres animaux'},
+        {id: 'accessoires_animaux', name: 'Accessoires animaux'}
+    ],
+    'sport': [
+        {id: 'fitness', name: 'Fitness et Musculation'},
+        {id: 'velos', name: 'Vélos'},
+        {id: 'football', name: 'Football'},
+        {id: 'sports_hiver', name: 'Sports d\'hiver'},
+        {id: 'sports_eau', name: 'Sports d\'eau'}
+    ],
+    'autres': [
+        {id: 'livres', name: 'Livres et Magazines'},
+        {id: 'instruments', name: 'Instruments de musique'},
+        {id: 'collections', name: 'Collections'},
+        {id: 'divers', name: 'Divers'}
+    ]
+};
+
+// Fonction pour charger les sous-catégories en fonction de la catégorie sélectionnée
+function loadSubcategories() {
+    const categorieSelect = document.getElementById('categorieSelect');
+    const sousCategorieSelect = document.getElementById('sousCategorieSelect');
+    
+    // Vider le select des sous-catégories
+    sousCategorieSelect.innerHTML = '<option value="">Toutes les sous-catégories</option>';
+    
+    const selectedCategorie = categorieSelect.value;
+    
+    // Si une catégorie est sélectionnée, charger ses sous-catégories
+    if (selectedCategorie && subCategories[selectedCategorie]) {
+        subCategories[selectedCategorie].forEach(subCat => {
+            const option = document.createElement('option');
+            option.value = subCat.id;
+            option.textContent = subCat.name;
+            sousCategorieSelect.appendChild(option);
+        });
+    }
 }
 
+// Afficher/masquer le panneau de filtres avancés
+function toggleAdvancedFilter() {
+    const panel = document.getElementById('advancedFilterPanel');
+    const advancedInput = document.getElementById('advancedInput');
+    
+    panel.classList.toggle('show');
+    
+    // Mettre à jour le champ caché pour conserver l'état du panneau
+    if (panel.classList.contains('show')) {
+        advancedInput.value = '1';
+    } else {
+        advancedInput.value = '';
+    }
+}
+
+// Gérer les boutons de tri
+function handleSortButtons() {
+    const sortButtons = document.querySelectorAll('.btn-sort');
+    const sortInput = document.getElementById('sortInput');
+    
+    sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Désactiver tous les boutons
+            sortButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Activer ce bouton
+            this.classList.add('active');
+            
+            // Mettre à jour le champ caché
+            sortInput.value = this.dataset.sort;
+        });
+    });
+}
+
+// Réinitialiser tous les filtres
 function resetFilters() {
     // Réinitialiser tous les champs du formulaire
-    document.querySelectorAll('.search-container form input, .search-container form select').forEach(element => {
+    document.querySelectorAll('#searchForm input:not([type="hidden"]), #searchForm select').forEach(element => {
         element.value = '';
     });
     
-    // Soumettre le formulaire
-    document.querySelector('.search-container form').submit();
+    // Garder le panneau avancé visible
+    document.getElementById('advancedInput').value = '1';
+    
+    // Réinitialiser les boutons de tri
+    document.querySelectorAll('.btn-sort').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('sortInput').value = '';
+    
+    // Recharger les sous-catégories (vider la liste)
+    loadSubcategories();
 }
+
+// Gérer la soumission du formulaire (pour démonstration uniquement)
+function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    // Récupérer tous les champs du formulaire
+    const formData = new FormData(document.getElementById('searchForm'));
+    let searchParams = {};
+    
+    // Convertir les données du formulaire en objet
+    for (let [key, value] of formData.entries()) {
+        if (value) { // Ne pas inclure les champs vides
+            searchParams[key] = value;
+        }
+    }
+    
+    // Afficher les paramètres de recherche (pour démonstration)
+    console.log("Paramètres de recherche:", searchParams);
+    
+    // Dans une application réelle, vous redirigeriez vers une page de résultats
+    // ou vous feriez une requête AJAX ici
+    alert("Recherche effectuée! Consultez la console pour voir les paramètres.");
+}
+
+// Initialiser tous les événements lorsque le DOM est chargé
+document.addEventListener('DOMContentLoaded', function() {
+    // Ajouter les écouteurs d'événements
+    document.getElementById('toggleFiltersBtn').addEventListener('click', toggleAdvancedFilter);
+    document.getElementById('categorieSelect').addEventListener('change', loadSubcategories);
+    document.getElementById('resetBtn').addEventListener('click', resetFilters);
+    document.getElementById('searchForm').addEventListener('submit', handleFormSubmit);
+    
+    // Initialiser les boutons de tri
+    handleSortButtons();
+    
+    // Charger les sous-catégories si nécessaire
+    loadSubcategories();
+});
 </script>
+
+</body>
+</html>
