@@ -541,7 +541,7 @@
                 <!-- Section 1: Catégories principales -->
                 <div class="dropdown-section">
                     @foreach ($navCategories as $cat )
-                         <a href="{{ route('annonces.by.categorie', $cat->id) }}" class="dropdown-item">
+                         <a href="" class="dropdown-item">
                         <i class="fa-solid fa-house"></i>
                         <span>{{ $cat->nom }}</span>
                     </a>
@@ -571,7 +571,7 @@
                 <!-- Liste scrollable des villes du Maroc -->
                 <div class="city-list">
                     @foreach ($navVilles as $vil )
-                     <a href="{{ route('annonces.by.ville', $vil->id) }}" class="dropdown-item">
+                     <a href="" class="dropdown-item">
                         <i class="fa-solid fa-map-pin"></i>
                         <span>{{$vil->nom}}</span>
                     </a>   

@@ -12,6 +12,11 @@ Route::get('/home',[HomeController::class ,'homeshow'])->name('homeshow');
 Route::get('/category/{category}', [HomeController::class, 'category'])->name('category');
 Route::get('/details/{id}', [HomeController::class, 'detailshow'])->name('details');
 
+Route::post('/favorites/add/{id}', [HomeController::class, 'addToFavorites'])->name('favorites.add');
+Route::delete('/favorites/remove/{id}', [HomeController::class, 'removeFromFavorites'])->name('favorites.remove');
+Route::get('/favorites', [HomeController::class, 'showFavorites'])->name('favorites');
+
+
 // Authentication Routes
 Route::get('/auth', [AuthController::class, 'showAuthForm'])->name('form');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -44,7 +49,7 @@ Route::post('/member/favoris/add/{id}', [App\Http\Controllers\MemberController::
 Route::delete('/member/favoris/remove/{id}', [App\Http\Controllers\MemberController::class, 'removeFavorite'])->name('member.favoris.remove');
 
 //nnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaaaavvvvvvvvvvvvvvvvvvvvbbbbbaaaaaarrrrrrrrre
-Route::post('/favorites/add/{id}', [HomeController::class, 'addToFavorites'])->name('favorites.add');
-Route::delete('/favorites/remove/{id}', [HomeController::class, 'removeFromFavorites'])->name('favorites.remove');
-Route::get('/favorites', [HomeController::class, 'showFavorites'])->name('favorites');
 
+// Search Routes
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'advancedSearch'])->name('search.advanced');
+Route::get('/search/nav', [App\Http\Controllers\SearchController::class, 'processNavSearch'])->name('process-nav-search');
