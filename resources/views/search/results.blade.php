@@ -1,8 +1,7 @@
-@extends('layouts.search')
+@extends('layouts.masterhome')
 <!-- Bootstrap 5 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-@section('content')
+@section('main')
 <div class="search-results-container">
     <!-- Display search filters -->
     @include('search.filters', [
@@ -11,14 +10,18 @@
         'sousCategories' => $sousCategories ?? [],
         'searchParams' => $searchParams ?? []
     ])
-    
-    <!-- Display search results count -->
-    <div class="search-results-count">
-        <h2>{{ $annonces->total() }} annonce(s) trouvée(s)</h2>
-        @if(isset($searchTerm))
-            <p>Résultats pour : "{{ $searchTerm }}"</p>
-        @endif
-    </div>
+    <!-- Inside search/results.blade.php, update the search results count section -->
+<div class="search-results-count">
+    <h2>{{ $annonces->total() }} annonce(s) trouvée(s)</h2>
+    @if(isset($searchTerm))
+        <p>Résultats pour : "{{ $searchTerm }}"</p>
+    @elseif(isset($categoryName))
+        <p>Annonces dans la catégorie : "{{ $categoryName }}"</p>
+    @elseif(isset($cityName))
+        <p>Annonces à : "{{ $cityName }}"</p>
+    @endif
+</div>
+   
     
     <!-- Display search results using pagecarte component -->
     <div class="search-results">

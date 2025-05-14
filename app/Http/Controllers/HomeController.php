@@ -12,7 +12,8 @@ class HomeController extends Controller
 {
     public function homeshow(){
         // Annonces récentes
-        $recentAds = Annonce::orderBy('date_publication', 'desc')
+        $recentAds = Annonce::where('statut','validee')
+            ->orderBy('date_publication', 'desc')
             ->with(['images', 'utilisateur', 'ville'])
             ->take(10)
             ->get();
@@ -23,7 +24,8 @@ class HomeController extends Controller
         // Annonces par catégorie
         $categoryAds = [];
         foreach ($randCategories as $category) {
-            $ads = Annonce::where('id_categorie', $category->id)
+            $ads = Annonce::where('statut','validee')
+                ->where('id_categorie', $category->id)
                 ->with(['images', 'utilisateur', 'ville', 'categorie'])
                 ->take(10)
                 ->get();
@@ -39,12 +41,14 @@ class HomeController extends Controller
     }
 
     public function detailshow($id){
-        $detailsAds = Annonce::where('id', $id)
+        $detailsAds = Annonce::where('statut','validee')
+            ->where('id', $id)
             ->with(['images','categorie','utilisateur','ville','souscategorie'])
             ->get();
             
         foreach($detailsAds as $ad){
-            $userAds = Annonce::where('id_utilisateur', $ad->id_utilisateur)
+            $userAds = Annonce::where('statut','validee')
+                ->where('id_utilisateur', $ad->id_utilisateur)
                 ->with(['images','utilisateur','ville',])
                 ->take(10)
                 ->get();   

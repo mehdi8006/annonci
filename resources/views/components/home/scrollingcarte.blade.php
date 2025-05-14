@@ -326,7 +326,7 @@
             </div>
             
             <!-- Titre du produit -->
-            <h2 class="product-title1">{{ $ad->titre }}</h2>
+            <h2 class="product-title1">{{ Str::limit($ad->titre, 30) }}</h2>
             
             <!-- Prix -->
             <div class="price1">

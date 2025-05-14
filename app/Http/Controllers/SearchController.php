@@ -27,7 +27,7 @@ class SearchController extends Controller
             ->orWhere('description', 'like', "%{$searchTerm}%")
             ->where('statut', 'validee')
             ->with(['utilisateur', 'ville', 'categorie', 'sousCategorie', 'images'])
-            ->paginate(8);
+            ->paginate(12);
             
         // Get categories and cities for filter component
         $categories = Categorie::all();
@@ -108,7 +108,7 @@ class SearchController extends Controller
         $query->with(['utilisateur', 'ville', 'categorie', 'sousCategorie', 'images']);
         
         // Paginate results
-        $annonces = $query->paginate(8);
+        $annonces = $query->paginate(12);
         
         // Get categories and cities for filter component
         $categories = Categorie::all();
@@ -129,6 +129,104 @@ class SearchController extends Controller
             'villes', 
             'sousCategories',
             'searchParams'
+        ));
+    }
+
+    /**
+     * Search announcements by category
+     */
+    public function searchByCategory(Request $request, $categoryId)
+    {
+        // Start query
+        $query = Annonce::query();
+        
+        // Filter by category
+        $query->where('id_categorie', $categoryId);
+        
+        // Only show validated announcements
+        $query->where('statut', 'validee');
+        
+        // Default sort by most recent
+        $query->orderBy('date_publication', 'desc');
+        
+        // Get related data
+        $query->with(['utilisateur', 'ville', 'categorie', 'sousCategorie', 'images']);
+        
+        // Paginate results
+        $annonces = $query->paginate(12);
+        
+        // Get categories and cities for filter component
+        $categories = Categorie::all();
+        $villes = Ville::all();
+        
+        // Get sous-categories for this category
+        $sousCategories = SousCategorie::where('id_categorie', $categoryId)->get();
+        
+        // Get the current category
+        $currentCategory = Categorie::find($categoryId);
+        
+        // Create search params to pre-select the category in the filter
+        $searchParams = [
+            'categorie' => $categoryId
+        ];
+        
+        // Add the category name to the view data
+        $categoryName = $currentCategory ? $currentCategory->nom : '';
+        
+        return view('search.results', compact(
+            'annonces', 
+            'categories', 
+            'villes', 
+            'sousCategories',
+            'searchParams',
+            'categoryName'
+        ));
+    }
+
+    /**
+     * Search announcements by city
+     */
+    public function searchByCity(Request $request, $cityId)
+    {
+        // Start query
+        $query = Annonce::query();
+        
+        // Filter by city
+        $query->where('id_ville', $cityId);
+        
+        // Only show validated announcements
+        $query->where('statut', 'validee');
+        
+        // Default sort by most recent
+        $query->orderBy('date_publication', 'desc');
+        
+        // Get related data
+        $query->with(['utilisateur', 'ville', 'categorie', 'sousCategorie', 'images']);
+        
+        // Paginate results
+        $annonces = $query->paginate(12);
+        
+        // Get categories and cities for filter component
+        $categories = Categorie::all();
+        $villes = Ville::all();
+        
+        // Get the current city
+        $currentCity = Ville::find($cityId);
+        
+        // Create search params to pre-select the city in the filter
+        $searchParams = [
+            'ville' => $cityId
+        ];
+        
+        // Add the city name to the view data
+        $cityName = $currentCity ? $currentCity->nom : '';
+        
+        return view('search.results', compact(
+            'annonces', 
+            'categories', 
+            'villes', 
+            'searchParams',
+            'cityName'
         ));
     }
 }

@@ -30,7 +30,7 @@
         }
 
         /* Container principal de la barre de navigation */
-        nav.navbar {
+        nav.navbar195 {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -44,18 +44,18 @@
         }
 
         /* Styles du logo avec texte */
-        .logo-text {
+        .logo-text195 {
             font-size: 1.5rem;
             font-weight: 600;
             color: #2563eb;
             display: flex;
             align-items: center;
             gap: 8px;
-            animation: slideInLeft 0.6s ease forwards; /* Animation d'entrée */
+            animation: slideInLeft195 0.6s ease forwards; /* Animation d'entrée */
         }
 
         /* Navigation principale (contient les dropdowns et la recherche) */
-        .main-navigation {
+        .main-navigation195 {
             display: flex;
             align-items: center;
             gap: 20px;
@@ -64,13 +64,13 @@
         }
 
         /* Containers pour les dropdowns de catégories et villes */
-        .category-dropdown, .city-dropdown {
+        .category-dropdown195, .city-dropdown195 {
             position: relative;
             display: inline-block;
         }
 
         /* Buttons pour déclencher les dropdowns */
-        .dropdown-button {
+        .dropdown-button195 {
             background-color: transparent;
             border: none;
             padding: 10px 15px;
@@ -85,25 +85,25 @@
         }
 
         /* Effet hover sur les boutons dropdown */
-        .dropdown-button:hover {
+        .dropdown-button195:hover {
             background-color: #f3f4f6;
         }
 
-        .dropdown-button i {
+        .dropdown-button195 i {
             color: #6b7280;
         }
 
         /* Animation de rotation du chevron */
-        .chevron {
+        .chevron195 {
             transition: transform 0.2s ease;
         }
 
-        .dropdown-button:hover .chevron {
+        .dropdown-button195:hover .chevron195 {
             transform: rotate(180deg);
         }
 
         /* Style des menus dropdown */
-        .dropdown-menu {
+        .dropdown-menu195 {
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -121,31 +121,31 @@
         }
 
         /* Affichage du dropdown au hover */
-        .category-dropdown:hover .dropdown-menu,
-        .city-dropdown:hover .dropdown-menu {
+        .category-dropdown195:hover .dropdown-menu195,
+        .city-dropdown195:hover .dropdown-menu195 {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
 
         /* Container de la barre de recherche */
-        .search-container {
+        .search-container195 {
             flex: 1;
             max-width: 400px;
             position: relative;
             opacity: 0;
-            animation: slideUpFade 0.6s ease 0.2s forwards; /* Animation d'entrée avec délai */
+            animation: slideUpFade195 0.6s ease 0.2s forwards; /* Animation d'entrée avec délai */
             will-change: transform, opacity; /* Optimisation performance */
         }
 
         /* Barre de recherche elle-même */
-        .search-bar {
+        .search-bar195 {
             display: flex;
             position: relative;
         }
 
         /* Input de recherche */
-        .search-bar input {
+        .search-bar195 input {
             width: 100%;
             padding: 12px 20px;
             border: none;
@@ -157,15 +157,15 @@
         }
 
         /* Styles du focus de l'input */
-        .search-bar input:focus,
-        .search-bar input:focus-visible {
+        .search-bar195 input:focus,
+        .search-bar195 input:focus-visible {
             outline: none;
             background: #fff;
             box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
         }
 
         /* Bouton de recherche */
-        .search-bar button {
+        .search-bar195 button {
             position: absolute;
             right: 6px;
             top: 6px;
@@ -184,24 +184,24 @@
         }
 
         /* Effet hover du bouton de recherche */
-        .search-bar button:hover {
+        .search-bar195 button:hover {
             background-color: #1d4ed8;
             transform: translateY(-2px) scale(1.02);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
         }
 
         /* Container des actions (connexion/déposer une annonce) */
-        .actions {
+        .actions195 {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
             opacity: 0;
-            animation: zoomIn 0.5s ease 0.4s forwards; /* Animation d'entrée avec délai */
+            animation: zoomIn195 0.5s ease 0.4s forwards; /* Animation d'entrée avec délai */
             will-change: transform, opacity;
         }
 
         /* Styles de base des boutons */
-        .btn {
+        .btn195 {
             padding: 10px 18px;
             border-radius: 12px;
             font-size: 15px;
@@ -215,44 +215,44 @@
         }
 
         /* Styles du focus visuel pour l'accessibilité */
-        .btn:focus-visible,
-        .search-bar button:focus-visible {
+        .btn195:focus-visible,
+        .search-bar195 button:focus-visible {
             outline: 2px solid #2563eb;
             outline-offset: 2px;
         }
 
         /* Bouton "Déposer une annonce" */
-        .btn-publish {
+        .btn-publish195 {
             background-color: #ea580c;
             color: white;
             box-shadow: 5px 4px 6px rgba(249, 115, 22, 0.1);
             transition: background 0.3s ease, transform 0.2s ease;
         }
 
-        .btn-publish:hover {
+        .btn-publish195:hover {
             background-color: #d9480f;
             transform: translateY(-2px);
         }
 
         /* Bouton connexion */
-        .btn-login {
+        .btn-login195 {
             background-color: transparent;
             color: #2563eb;
             border: 2px solid #e2e8f0;
         }
 
-        .btn-login:hover {
+        .btn-login195:hover {
             background-color: rgba(37, 99, 235, 0.05);
             border-color: #2563eb;
         }
 
         /* Sections des menus dropdown */
-        .dropdown-section {
+        .dropdown-section195 {
             padding: 8px 0;
         }
 
         /* Items individuels des dropdowns */
-        .dropdown-item {
+        .dropdown-item195 {
             padding: 8px 20px;
             display: flex;
             align-items: center;
@@ -263,25 +263,25 @@
             transition: background-color 0.15s ease;
         }
 
-        .dropdown-item:hover {
+        .dropdown-item195:hover {
             background-color: #f3f4f6;
         }
 
-        .dropdown-item i {
+        .dropdown-item195 i {
             width: 20px;
             text-align: left;
             color: #6b7280;
         }
 
         /* Séparateur entre sections */
-        .divider {
+        .divider195 {
             height: 1px;
             background-color: #e5e7eb;
             margin: 4px 16px;
         }
 
         /* En-tête de section */
-        .section-header {
+        .section-header195 {
             padding: 8px 20px;
             font-size: 13px;
             font-weight: 600;
@@ -291,39 +291,39 @@
         }
 
         /* Styles spécifiques au dropdown des villes */
-        .city-dropdown .dropdown-menu {
+        .city-dropdown195 .dropdown-menu195 {
             min-width: 300px;
             max-width: 350px;
         }
 
         /* Liste scrollable des villes */
-        .city-list {
+        .city-list195 {
             max-height: 300px;
             overflow-y: auto;
             padding: 4px 0;
         }
 
         /* Personnalisation de la scrollbar */
-        .city-list::-webkit-scrollbar {
+        .city-list195::-webkit-scrollbar {
             width: 6px;
         }
 
-        .city-list::-webkit-scrollbar-track {
+        .city-list195::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
 
-        .city-list::-webkit-scrollbar-thumb {
+        .city-list195::-webkit-scrollbar-thumb {
             background: #c2c2c2;
             border-radius: 3px;
         }
 
-        .city-list::-webkit-scrollbar-thumb:hover {
+        .city-list195::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
         }
 
         /* Media query pour écrans moyens et grands */
         @media (min-width: 769px) {
-            .search-container {
+            .search-container195 {
                 margin: 0;
                 flex: 1;
             }
@@ -331,29 +331,29 @@
 
         /* Media query pour tablettes et mobiles */
         @media (max-width: 768px) {
-            .navbar {
+            .navbar195 {
                 flex-direction: column;
                 align-items: stretch;
             }
 
-            .main-navigation {
+            .main-navigation195 {
                 flex-wrap: wrap;
                 margin: 12px 0;
                 justify-content: center;
             }
 
-            .search-container {
+            .search-container195 {
                 justify-content: center;
                 max-width: 100%;
                 width: 100%;
             }
 
-            .actions {
+            .actions195 {
                 justify-content: center;
                 width: 100%;
             }
 
-            .search-bar button {
+            .search-bar195 button {
                 right: 5px;
                 top: 5px;
                 bottom: 5px;
@@ -364,7 +364,7 @@
         /* Animations personnalisées */
         
         /* Animation d'entrée depuis la gauche */
-        @keyframes slideInLeft {
+        @keyframes slideInLeft195 {
             from {
                 opacity: 0;
                 transform: translateX(-30px);
@@ -376,7 +376,7 @@
         }
 
         /* Animation d'entrée du bas avec fade */
-        @keyframes slideUpFade {
+        @keyframes slideUpFade195 {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -388,7 +388,7 @@
         }
 
         /* Animation zoom en entrée */
-        @keyframes zoomIn {
+        @keyframes zoomIn195 {
             from {
                 opacity: 0;
                 transform: scale(0.8);
@@ -400,7 +400,7 @@
         }
     </style>
      <style>
-        .profile-button102 {
+        .profile-button102195 {
             background-color: #fff;
             border: 2px solid #3b82f6;
             border-radius: 9999px;
@@ -414,7 +414,7 @@
             position: relative;
         }
 
-        .profile-icon102 {
+        .profile-icon102195 {
             background-color: #e5e7eb;
             border-radius: 50%;
             width: 24px;
@@ -425,16 +425,16 @@
             color: #6b7280;
         }
 
-        .profile-name102 {
+        .profile-name102195 {
             font-size: 15px;
         }
 
-        .chevron102 {
+        .chevron102195 {
             color: #6b7280;
             font-size: 14px;
         }
 
-        .dropdown-menu102 {
+        .dropdown-menu102195 {
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -451,13 +451,13 @@
             z-index: 1000;
         }
 
-        .profile-button102:hover .dropdown-menu102 {
+        .profile-button102195:hover .dropdown-menu102195 {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
 
-        .dropdown-item102 {
+        .dropdown-item102195 {
             padding: 8px 20px;
             display: flex;
             align-items: center;
@@ -468,23 +468,23 @@
             transition: background-color 0.15s ease;
         }
 
-        .dropdown-item102:hover {
+        .dropdown-item102195:hover {
             background-color: #f3f4f6;
         }
 
-        .dropdown-item102 i {
+        .dropdown-item102195 i {
             width: 20px;
             text-align: left;
             color: #6b7280;
         }
 
-        .divider102 {
+        .divider102195 {
             height: 1px;
             background-color: #e5e7eb;
             margin: 4px 0;
         }
 
-        .publish-button102 {
+        .publish-button102195 {
             background-color: #ef4444;
             color: white;
             border: none;
@@ -495,20 +495,20 @@
             margin-left: 12px;
         }
 
-        .publish-button102:hover {
+        .publish-button102195:hover {
             background-color: #dc2626;
         }
 
         /* Just for demo positioning */
-        .demo-container102 {
+        .demo-container102195 {
             position: relative;
             display: inline-block;
         }
-       .logout i {
+       .logout195 i {
             
             color:rgb(255, 0, 0);
         }
-        .logout{
+        .logout195{
 
             color:rgb(255, 0, 0);
         }
@@ -517,31 +517,31 @@
 <body>
     <!-- Barre de navigation principale -->
     <!-- Navigation bar with logout button (in the authenticated user dropdown) -->
-<nav class="navbar" role="navigation" aria-label="Barre de navigation principale">
+<nav class="navbar195" role="navigation" aria-label="Barre de navigation principale">
     <!-- Logo avec icône shopping -->
     <a href="{{ route('homeshow') }}">
-    <div class="logo-text">
+    <div class="logo-text195">
         <i class="fa-solid fa-bag-shopping"></i> Annoncia
     </div>
     </a>
     <!-- Navigation principale contenant les dropdowns et la recherche -->
-    <div class="main-navigation">
+    <div class="main-navigation195">
         <!-- Dropdown Catégories -->
-        <div class="category-dropdown">
-            <button class="dropdown-button">
+        <div class="category-dropdown195">
+            <button class="dropdown-button195">
                 <i class="fa-solid fa-layer-group"></i>
                 <span>Catégories</span>
-                <i class="fa-solid fa-chevron-down chevron"></i>
+                <i class="fa-solid fa-chevron-down chevron195"></i>
             </button>
             
             <!-- Menu déroulant des catégories -->
-            <div class="dropdown-menu">
-                <div class="section-header">Toutes les categorie</div>
+            <div class="dropdown-menu195">
+                <div class="section-header195">Toutes les categorie</div>
 
                 <!-- Section 1: Catégories principales -->
-                <div class="dropdown-section">
+                <div class="dropdown-section195">
                     @foreach ($navCategories as $cat )
-                         <a href="" class="dropdown-item">
+                         <a href="{{ route('search.by.category', $cat->id) }}" class="dropdown-item195">
                         <i class="fa-solid fa-house"></i>
                         <span>{{ $cat->nom }}</span>
                     </a>
@@ -556,22 +556,22 @@
         </div>
 
         <!-- Dropdown Villes -->
-        <div class="city-dropdown">
+        <div class="city-dropdown195">
             
-            <button class="dropdown-button">
+            <button class="dropdown-button195">
                 <i class="fa-solid fa-location-dot"></i>
                 <span>Villes</span>
-                <i class="fa-solid fa-chevron-down chevron"></i>
+                <i class="fa-solid fa-chevron-down chevron195"></i>
             </button>
             
             <!-- Menu déroulant des villes -->
-            <div class="dropdown-menu">
-                <div class="section-header">Toutes les villes</div>
+            <div class="dropdown-menu195">
+                <div class="section-header195">Toutes les villes</div>
                 
                 <!-- Liste scrollable des villes du Maroc -->
-                <div class="city-list">
+                <div class="city-list195">
                     @foreach ($navVilles as $vil )
-                     <a href="" class="dropdown-item">
+                     <a href="{{ route('search.by.city', $vil->id) }}" class="dropdown-item195">
                         <i class="fa-solid fa-map-pin"></i>
                         <span>{{$vil->nom}}</span>
                     </a>   
@@ -585,8 +585,8 @@
         </div>
 
         <!-- Search form in nav.blade.php -->
-<div class="search-container">
-    <form action="{{ route('process-nav-search') }}" method="GET" class="search-bar">
+<div class="search-container195">
+    <form action="{{ route('process-nav-search') }}" method="GET" class="search-bar195">
         <input type="text" name="search_term" placeholder="Rechercher..." aria-label="Rechercher des annonces" />
         <button type="submit">
             <i class="fa-solid fa-search"></i>
@@ -599,11 +599,11 @@
     <!-- Update only the auth-related section in the navigation bar -->
 
 <!-- Inside the navigation bar, replace the actions div with this: -->
-<div class="actions">
+<div class="actions195">
     <!-- Section invité - visible uniquement pour les utilisateurs non connectés -->
     @if (!session()->has('user_id'))
     <a href="{{ route('form') }}">
-        <button class="btn btn-login" id="login-btn">
+        <button class="btn195 btn-login195" id="login-btn">
             <i class="fa-solid fa-right-to-bracket"></i>
            Se Connecter
         </button>
@@ -612,35 +612,35 @@
    
     <!-- Section utilisateur connecté - visible uniquement pour les utilisateurs connectés -->
     @if (session()->has('user_id'))
-    <div class="demo-container102">
-        <button class="profile-button102">
-            <div class="profile-icon102">
+    <div class="demo-container102195">
+        <button class="profile-button102195">
+            <div class="profile-icon102195">
                 <i class="fa-solid fa-user"></i>
             </div>
-            <span class="profile-name102">{{ session('user_name') }}</span>
-            <i class="fa-solid fa-chevron-down chevron102"></i>
+            <span class="profile-name102195">{{ session('user_name') }}</span>
+            <i class="fa-solid fa-chevron-down chevron102195"></i>
             
-            <div class="dropdown-menu102">
-                <a href="{{ route('member.dashboard') }}" class="dropdown-item102">
+            <div class="dropdown-menu102195">
+                <a href="{{ route('member.dashboard') }}" class="dropdown-item102195">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Tableau de bord</span>
                 </a>
-                <a href="{{ route('member.annonces') }}" class="dropdown-item102">
+                <a href="{{ route('member.annonces') }}" class="dropdown-item102195">
                     <i class="fa-regular fa-newspaper"></i>
                     <span>Mes annonces</span>
                 </a>
-                <a href="{{ route('member.favoris') }}" class="dropdown-item102">
+                <a href="{{ route('member.favoris') }}" class="dropdown-item102195">
                     <i class="fa-regular fa-heart"></i>
                     <span>Mes favoris</span>
                 </a>
-                <a href="{{ route('member.parametres') }}" class="dropdown-item102">
+                <a href="{{ route('member.parametres') }}" class="dropdown-item102195">
                     <i class="fa-solid fa-gear"></i>
                     <span>Paramètres</span>
                 </a>
-                <div class="divider102"></div>
+                <div class="divider102195"></div>
                 <!-- Bouton de déconnexion -->
-               <a href="{{ route('logout') }}" class="dropdown-item102">
-                    <div class="logout">  <i class="fa-solid fa-sign-out-alt"></i>
+               <a href="{{ route('logout') }}" class="dropdown-item102195">
+                    <div class="logout195">  <i class="fa-solid fa-sign-out-alt"></i>
                     <span>Se Déconnecter</span></div> 
                 </a>
             </div>
@@ -650,7 +650,7 @@
    
     <!-- Bouton déposer une annonce (visible pour tous) -->
     <a href="{{ route('member.annonces.create') }}">
-        <button class="btn btn-publish" id="publish-btn">
+        <button class="btn195 btn-publish195" id="publish-btn">
             <i class="fa-solid fa-square-plus"></i>
             Déposer une annonce 
         </button>

@@ -53,3 +53,5 @@ Route::delete('/member/favoris/remove/{id}', [App\Http\Controllers\MemberControl
 // Search Routes
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'advancedSearch'])->name('search.advanced');
 Route::get('/search/nav', [App\Http\Controllers\SearchController::class, 'processNavSearch'])->name('process-nav-search');
+Route::get('/search/category/{categoryId}', [SearchController::class, 'searchByCategory'])->name('search.by.category');
+Route::get('/search/city/{cityId}', [SearchController::class, 'searchByCity'])->name('search.by.city');
