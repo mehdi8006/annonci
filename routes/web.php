@@ -11,6 +11,7 @@ Route::get('/', function () {
 Route::get('/home',[HomeController::class ,'homeshow'])->name('homeshow');
 Route::get('/category/{category}', [HomeController::class, 'category'])->name('category');
 Route::get('/details/{id}', [HomeController::class, 'detailshow'])->name('details');
+Route::get('member/details/{id}', [HomeController::class, 'detailmember'])->name('detailsm');
 
 Route::post('/favorites/add/{id}', [HomeController::class, 'addToFavorites'])->name('favorites.add');
 Route::delete('/favorites/remove/{id}', [HomeController::class, 'removeFromFavorites'])->name('favorites.remove');

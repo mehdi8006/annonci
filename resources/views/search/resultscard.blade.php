@@ -28,7 +28,7 @@
                         {{ $annonce->sousCategorie ? $annonce->sousCategorie->nom : $annonce->categorie->nom }} dans {{ $annonce->ville->nom }}
                     </div>
                     
-                    <h2 class="product-title2"> {{ Str::limit($annonce->titre, 45) }} </h2>
+                    <h2 class="product-title2"> {{ Str::limit($annonce->titre, 35) }} </h2>
                     
                     <div class="price2">
                         {{ number_format($annonce->prix, 0, ',', ' ') }}<span class="currency2">DH</span>

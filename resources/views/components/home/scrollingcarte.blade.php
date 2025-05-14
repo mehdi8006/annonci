@@ -281,7 +281,7 @@
         text-align: center;
     }
 </style>
-@props(['ads','title'])
+@props(['ads','title','add'])
 <!-- Titre de la section des offres spéciales -->
 <div class="section-title1">{{$title}}</div>
 
@@ -336,8 +336,8 @@
     </div>   
     </a>
     @endforeach
-    
-    <!-- Card for "See more ads" -->
+    @if ($add!='0')
+     <!-- Card for "See more ads" -->
     <div class="product-card1">
         <div class="card123">
             <div class="plus-circle">
@@ -349,6 +349,10 @@
             <div class="text">Voir plus d'annonces</div>
         </div>
     </div>
+        
+    @endif
+    <!-- Card for "See more ads" -->
+   
 </div>
 
 <script>

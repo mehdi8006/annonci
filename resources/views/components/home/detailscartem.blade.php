@@ -1,64 +1,76 @@
 {{-- resources/views/components/home/detailscarte.blade.php --}}
 
 <style>
-    .container159 {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 15px;
-        overflow: hidden; /* Prevent scrollbars */
-    }
+    /* Enhanced CSS for btn-action454 section */
+.btn-action454 {
+    display: flex;
+    gap: 15px;
+    margin: 25px 0;
+    padding: 0 20px 20px;
+    justify-content: center;
+}
 
-    .container159 h1 {
-        color: #333;
-        text-align: center;
-        font-size: 20px;
-        margin-bottom: 15px;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-    }
+.btn-action454 a {
+    text-decoration: none;
+}
 
-    .image-container {
-        position: relative;
-        width: 100%;
-        min-height: 200px; /* Changed from fixed height to min-height */
-        margin: 20px auto;
-        border-radius: 8px;
-        overflow: hidden; /* Prevent scrollbars */
-    }
- .image-not-found {
-        width: 100%;
-        height: 100%;
-        min-height: 200px; /* Use min-height instead of fixed height */
-        display: flex;
+.btn-action454 button {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid;
+    font-weight: 500;
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-action454 button i {
+    font-size: 14px;
+}
+
+
+
+
+
+.btn-action454 .r:last-child {
+    background-color: white;
+  
+    border-color: #e74c3c;
+}
+.btn-action454 .m:last-child {
+    background-color: white;
+    color: blue;
+    border-color:blue;
+}
+
+.btn-action454 .r:last-child:hover {
+    background-color: #fde5e5;
+    transform: translateY(-2px);
+}.btn-action454 .m:last-child:hover {
+    background-color: #b9aeff;
+    transform: translateY(-2px);
+}
+
+/* Responsive styling for small screens */
+@media (max-width: 576px) {
+    .btn-action454 {
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #f8f8f8;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        color: #666;
-        overflow: hidden; /* Prevent scrollbars */
+        align-items: stretch;
+        gap: 12px;
     }
-
-    .image-not-found svg {
-        width: 60px;
-        height: 60px;
-        margin-bottom: 15px;
-        fill: #999;
-    }
-
-    .image-not-found p {
-        margin: 5px 0;
-        font-weight: 500;
-        font-size: 16px;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        text-align: center;
+    
+    .btn-action454 button {
         width: 100%;
-        padding: 0 10px;
-        box-sizing: border-box;
     }
-.container4 {
+}
+   /* Action Buttons Section */
+
+    .container4 {
         max-width: 1200px;
         margin: 0 auto;
     }
@@ -136,7 +148,7 @@
         color: #2c3e50;
         word-wrap: break-word;
         overflow-wrap: break-word;
-        max-width: 100%;
+        word-break: break-word;
     }
     
     .product-price4 {
@@ -182,7 +194,6 @@
     .product-description4 {
         margin-bottom: 20px;
         line-height: 1.7;
-        width: 100%;
     }
     
     .product-description4 h3 {
@@ -190,19 +201,14 @@
         color: #2c3e50;
     }
     
-    /* Improved styling for paragraph text wrapping */
+    /* Improved paragraph text wrapping */
     .product-description4 p {
-        margin: 0;
-        padding: 0;
         word-wrap: break-word;
         overflow-wrap: break-word;
+        word-break: break-word;
         white-space: normal;
-        width: 100%;
         max-width: 100%;
-        text-align: justify;
         hyphens: auto;
-        -webkit-hyphens: auto;
-        -ms-hyphens: auto;
     }
     
     /* Seller Section */
@@ -491,14 +497,11 @@
         padding: 8px;
     }
     
-    .product-details4 .product-title4 {
+    .product-title4 {
         font-size: 18px;
         font-weight: bold;
         margin-bottom: 8px;
         color: #333;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        width: 100%;
     }
     
     .price-location4 {
@@ -580,15 +583,86 @@
         margin-right: 8px;
     }
 
-    /* Apply global p tag styling to ensure consistent text wrapping */
-    p {
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        word-break: break-word !important;
-        max-width: 100% !important;
+    /* Fixed styling for container159 and image not found - UPDATED TO REMOVE SCROLLBARS */
+    .container159 {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 15px;
+        overflow: hidden; /* Prevent scrollbars */
+    }
+
+    .container159 h1 {
+        color: #333;
+        text-align: center;
+        font-size: 20px;
+        margin-bottom: 15px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .image-container {
+        position: relative;
+        width: 100%;
+        min-height: 200px; /* Changed from fixed height to min-height */
+        margin: 20px auto;
+        border-radius: 8px;
+        overflow: hidden; /* Prevent scrollbars */
+    }
+
+    .image-not-found {
+        width: 100%;
+        height: 100%;
+        min-height: 200px; /* Use min-height instead of fixed height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        color: #666;
+        overflow: hidden; /* Prevent scrollbars */
+    }
+
+    .image-not-found svg {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+        fill: #999;
+    }
+
+    .image-not-found p {
+        margin: 5px 0;
+        font-weight: 500;
+        font-size: 16px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        text-align: center;
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 576px) {
+        .container159 {
+            padding: 10px;
+        }
+        
+        .image-container {
+            min-height: 180px;
+        }
+        
+        .image-not-found svg {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .container159 h1 {
+            font-size: 18px;
+        }
     }
 </style>
-@props(['userAds','ads','isFavorite','add'])
+@props(['ads','isFavorite'])
 <div class="container4">
     <div class="product-detail4">
         @foreach ($ads as $ad)
@@ -646,7 +720,9 @@
                 
                 <div class="product-description4">
                     <h3>Description</h3>
-                    <p>{{ $ad->description }}</p>
+                    <p>
+                        {{ $ad->description }}
+                    </p>
                 </div>
                 <div class="actions4">
                     <a href="#contact">
@@ -706,10 +782,24 @@
             </div>
         </div>
         @endforeach
-        <div class="other-ads4">
-            <x-home.scrollingcarte :ads="$userAds" :add="$add" :title="'annonces meme vendeur '"/>
-        </div>
+       
     </div>
+   <!-- Updated btn-action454 section with better text and Font Awesome icons -->
+<div class="btn-action454">
+    <a href="{{ url()->previous() }}">
+        <button class="r">
+            <i class="fas fa-arrow-left"></i>
+            Retour
+        </button>
+    </a>
+    <a href="{{ route('member.annonces.edit',$ad->id) }}">
+         <button class="m">
+            <i class="fas fa-edit"></i>
+            Modifier l'annonce
+         </button>
+    </a>
+</div>
+
 </div>
 
 <script>

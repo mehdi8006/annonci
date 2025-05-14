@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="announcement-actions">
-                            <a href="{{ route('details', $annonce->id) }}" class="btn-action btn-view" title="Voir">
+                            <a href="{{ route('detailsm', $annonce->id) }}" class="btn-action btn-view" title="Voir">
                                 <i class="fas fa-eye"></i>
                             </a>
                             <a href="{{ route('member.annonces.edit', $annonce->id) }}" class="btn-action btn-edit" title="Modifier">

@@ -54,7 +54,7 @@
                                 {{ $favorite->annonce->ville->nom ?? 'Non spécifiée' }}
                             </td>
                             <td data-label="Actions" class="actions-cell">
-                                <a href="{{ route('details', $favorite->annonce->id) }}" class="view-btn">
+                                <a href="{{ route('detailsm', $favorite->annonce->id) }}" class="view-btn">
                                     <i class="fas fa-eye"></i> Voir
                                 </a>
                                 <form action="{{ route('member.favoris.remove', $favorite->annonce->id) }}" 

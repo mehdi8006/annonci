@@ -8,8 +8,18 @@
 </head>
 <body>
    @extends('layouts.masterhome') 
-   @section('main')
-   <x-home.detailscarte :userAds="$userAds" :ads="$detailsAds" :isFavorite="$isFavorite" />   
+   @if ($page=='show')
+    @section('main')
+   <x-home.detailscarte :userAds="$userAds" :add="$add" :ads="$detailsAds" :isFavorite="$isFavorite" />   
    @endsection
+       
+   @endif
+  
+   @if ($page=='member')
+    @section('main')
+   <x-home.detailscartem :ads="$detailsAds" :isFavorite="$isFavorite" />   
+   @endsection   
+   @endif
+  
 </body>
 </html>

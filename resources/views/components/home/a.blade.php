@@ -151,11 +151,12 @@
         </div> 
        
         <div class="cta-container0">
+            <a href="{{ route('member.annonces.create') }}">
             <button class="cta-button0">
                 <i class="fa-solid fa-square-plus"></i>
                 Déposer une annonce
             </button>
-            
+            </a> 
         </div>
     </main>
 </body>

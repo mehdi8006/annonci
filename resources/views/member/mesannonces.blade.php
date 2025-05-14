@@ -99,7 +99,7 @@
                             <td>{{ $annonce->created_at->format('d/m/Y') }}</td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="{{ route('details', $annonce->id) }}" class="btn btn-view" title="Voir">
+                                    <a href="{{ route('detailsm', $annonce->id) }}" class="btn btn-view" title="Voir">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('member.annonces.edit', $annonce->id) }}" class="btn btn-edit" title="Modifier">

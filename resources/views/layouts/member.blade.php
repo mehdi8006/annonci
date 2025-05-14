@@ -38,7 +38,7 @@
             border-radius: 8px;
             height: fit-content;
             position: sticky;
-            top: 20px;
+            top: 50px;
         }
         
         .profile {

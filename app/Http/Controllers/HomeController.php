@@ -35,9 +35,9 @@ class HomeController extends Controller
                 'ads' => $ads
             ];
         }
-
+        $add='1';
         // Envoyer les données à la vue
-        return view('home', compact('recentAds', 'categoryAds'));
+        return view('home', compact('recentAds', 'add','categoryAds'));
     }
 
     public function detailshow($id){
@@ -50,7 +50,6 @@ class HomeController extends Controller
             $userAds = Annonce::where('statut','validee')
                 ->where('id_utilisateur', $ad->id_utilisateur)
                 ->with(['images','utilisateur','ville',])
-                ->take(10)
                 ->get();   
         }
         
@@ -62,8 +61,28 @@ class HomeController extends Controller
                 ->where('id_annonce', $id)
                 ->exists();
         }
+        $page='show';
+        $add='0';
+        return view('detail', compact('isFavorite','add','userAds','detailsAds','page'));
+    }
+     public function detailmember($id){
+        $detailsAds = Annonce::where('id', $id)
+            ->with(['images','categorie','ville','souscategorie'])
+            ->get();
+            
+       
         
-        return view('detail', compact('isFavorite','userAds','detailsAds'));
+        $isFavorite = false;
+        // Check if user is logged in using session
+        if (Session::has('user_id')) {
+            $userId = Session::get('user_id');
+            $isFavorite = Favorite::where('id_utilisateur', $userId)
+                ->where('id_annonce', $id)
+                ->exists();
+        }
+        $page='member';
+        
+        return view('detail', compact('isFavorite','detailsAds','page'));
     }
 
     /**
