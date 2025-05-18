@@ -1,6 +1,88 @@
 {{-- resources/views/components/home/detailscarte.blade.php --}}
 
 <style>
+    .report-button44 {
+    background-color: white;
+    color: #777;
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.report-button44:hover {
+    background-color: #f8f8f8;
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.report-button44 i {
+    margin-right: 8px;
+}
+ /* Alert Messages */
+.alert-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideInRight 0.5s forwards;
+    z-index: 9999;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 5px solid #28a745;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 5px solid #dc3545;
+}
+
+.alert-message i {
+    font-size: 20px;
+}
+
+.close-alert {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+}
+
+.close-alert:hover {
+    opacity: 1;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
     .container159 {
         max-width: 800px;
         margin: 0 auto;
@@ -589,6 +671,21 @@
     }
 </style>
 @props(['userAds','ads','isFavorite','add'])
+@if (session('success'))
+    <div class="alert-message success-message">
+        <i class="fas fa-check-circle"></i>
+        {{ session('success') }}
+        <button type="button" class="close-alert">&times;</button>
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="alert-message error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ session('error') }}
+        <button type="button" class="close-alert">&times;</button>
+    </div>
+@endif
 <div class="container4">
     <div class="product-detail4">
         @foreach ($ads as $ad)
@@ -669,6 +766,7 @@
                     </div>
                     
                     @if(session()->has('user_id'))
+                    
                         @if($isFavorite)
                             <form action="{{ route('favorites.remove', $ad->id) }}" method="POST" style="display: inline;">
                                 @csrf
@@ -694,6 +792,17 @@
                                 Connectez-vous pour ajouter aux favoris
                             </button>
                         </a>
+                    @endif
+                     @if(session()->has('user_id'))
+                    <a href="{{ route('annonces.report', $ad->id) }}" class="report-button44">
+                    <i class="fas fa-flag"></i>
+                    Signaler l'annonce
+                    </a>
+                    @else
+                    <a href="{{ route('form') }}" class="report-button44">
+                    <i class="fas fa-flag"></i>
+                    Connectez-vous pour signaler
+                    </a>
                     @endif
                 </div>
             </div>
@@ -744,4 +853,29 @@
             overlay.addEventListener('click', closeContactModal);
         }
     });
+    // Handle closing alert messages
+document.addEventListener('DOMContentLoaded', function() {
+    const closeButtons = document.querySelectorAll('.close-alert');
+    
+    closeButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const alert = this.parentElement;
+            alert.style.opacity = '0';
+            setTimeout(function() {
+                alert.style.display = 'none';
+            }, 300);
+        });
+    });
+    
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert-message');
+    setTimeout(function() {
+        alerts.forEach(function(alert) {
+            alert.style.opacity = '0';
+            setTimeout(function() {
+                alert.style.display = 'none';
+            }, 300);
+        });
+    }, 5000);
+});
 </script>

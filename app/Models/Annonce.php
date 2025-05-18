@@ -86,4 +86,13 @@ class Annonce extends Model
     {
         return $this->hasMany(Favorite::class, 'id_annonce');
     }
+    // In App\Models\Annonce.php, add this method
+
+/**
+ * Get the reports for the annonce.
+ */
+public function reports()
+{
+    return $this->hasMany(Report::class, 'id_annonce');
+}
 }

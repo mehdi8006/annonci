@@ -58,4 +58,6 @@ Route::get('/search/nav', [App\Http\Controllers\SearchController::class, 'proces
 Route::get('/search/category/{categoryId}', [SearchController::class, 'searchByCategory'])->name('search.by.category');
 Route::get('/search/city/{cityId}', [SearchController::class, 'searchByCity'])->name('search.by.city');
 
-
+// Report routes
+Route::get('/annonces/{id}/report', [App\Http\Controllers\ReportController::class, 'showReportForm'])->name('annonces.report');
+Route::post('/annonces/{id}/report', [App\Http\Controllers\ReportController::class, 'storeReport'])->name('annonces.report.store');

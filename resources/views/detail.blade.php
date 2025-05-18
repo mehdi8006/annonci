@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
+   
    @extends('layouts.masterhome') 
    @if ($page=='show')
     @section('main')

@@ -2,6 +2,7 @@
 
 <style>
     /* Enhanced CSS for btn-action454 section */
+
 .btn-action454 {
     display: flex;
     gap: 15px;
@@ -743,8 +744,9 @@
                             <i class="fas fa-phone"></i> {{ $ad->utilisateur->telephon }}
                         </div>
                     </div>
-                    
+                  
                     @if(session()->has('user_id'))
+                    
                         @if($isFavorite)
                             <form action="{{ route('favorites.remove', $ad->id) }}" method="POST" style="display: inline;">
                                 @csrf
