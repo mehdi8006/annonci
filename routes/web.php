@@ -61,3 +61,5 @@ Route::get('/search/city/{cityId}', [SearchController::class, 'searchByCity'])->
 // Report routes
 Route::get('/annonces/{id}/report', [App\Http\Controllers\ReportController::class, 'showReportForm'])->name('annonces.report');
 Route::post('/annonces/{id}/report', [App\Http\Controllers\ReportController::class, 'storeReport'])->name('annonces.report.store');
+// Email Verification Route
+Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('email.verify');
