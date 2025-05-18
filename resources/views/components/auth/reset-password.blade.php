@@ -230,6 +230,7 @@
     </style>
 </head>
 <body>
+    @include('components.nav')
     <div class="auth-wrapper">
         <div class="auth-container">
             <!-- Section gauche (Branding) -->
@@ -288,5 +289,7 @@
             </div>
         </div>
     </div>
+        @include('components.footer')
+
 </body>
 </html>
