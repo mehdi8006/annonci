@@ -1,990 +1,465 @@
-<!-- resources/views/admin/annonces/show.blade.php -->
 @extends('admin.layouts.app')
 
 @section('title', 'Détails de l\'annonce')
 
 @section('content')
-    <div class="admin-header">
-        <h1>Détails de l'annonce #{{ $annonce->id }}</h1>
-        <div class="admin-header-actions">
-            <a href="{{ route('admin.annonces.index') }}" class="admin-button admin-button-secondary">
-                <i class="fas fa-arrow-left"></i> Retour à la liste
-            </a>
-            <a href="{{ route('details', $annonce->id) }}" target="_blank" class="admin-button">
-                <i class="fas fa-external-link-alt"></i> Voir sur le site
-            </a>
-        </div>
+<div class="container-fluid px-4">
+    <!-- Header with back button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Détails de l'annonce</h1>
+        <a href="{{ route('admin.annonces.index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Retour
+        </a>
     </div>
 
     <div class="row">
-        <!-- Status Card -->
-        <div class="col-lg-12 mb-4">
-            <div class="admin-card status-dashboard">
-                <div class="status-content">
-                    <div class="status-info">
-                        <span class="status-label">Statut actuel:</span>
-                        <span class="status-badge 
-                            @if($annonce->statut === 'validee') status-success
-                            @elseif($annonce->statut === 'en_attente') status-warning
-                            @else status-danger
-                            @endif">
-                            <i class="status-icon 
-                                @if($annonce->statut === 'validee') fas fa-check
-                                @elseif($annonce->statut === 'en_attente') fas fa-clock
-                                @else fas fa-ban
-                                @endif"></i>
-                            {{ ucfirst(str_replace('_', ' ', $annonce->statut)) }}
+        <!-- Annonce Info Card -->
+        <div class="col-xl-4 col-lg-5 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <!-- Annonce Header -->
+                <div class="card-header bg-primary text-white py-3 position-relative">
+                    <h5 class="mb-0">Informations sur l'annonce</h5>
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <span class="badge 
+                            @if($annonce->statut === 'validee') bg-success
+                            @elseif($annonce->statut === 'en_attente') bg-warning text-dark
+                            @else bg-danger @endif px-3 py-2">
+                            @if($annonce->statut === 'validee')
+                                <i class="fas fa-check-circle me-1"></i> Validée
+                            @elseif($annonce->statut === 'en_attente')
+                                <i class="fas fa-clock me-1"></i> En attente
+                            @else
+                                <i class="fas fa-ban me-1"></i> Supprimée
+                            @endif
                         </span>
-                    </div>
-                    <div class="status-actions">
-                        <form action="{{ route('admin.annonces.updateStatus', $annonce->id) }}" method="POST" class="status-form">
-                            @csrf
-                            @method('PUT')
-                            <div class="btn-group status-buttons" role="group">
-                                <button type="submit" name="statut" value="validee" class="btn {{ $annonce->statut === 'validee' ? 'btn-success active' : 'btn-outline-success' }}">
-                                    <i class="fas fa-check"></i> Approuver
-                                </button>
-                                <button type="submit" name="statut" value="en_attente" class="btn {{ $annonce->statut === 'en_attente' ? 'btn-warning active' : 'btn-outline-warning' }}">
-                                    <i class="fas fa-clock"></i> En attente
-                                </button>
-                                <button type="submit" name="statut" value="supprimee" class="btn {{ $annonce->statut === 'supprimee' ? 'btn-danger active' : 'btn-outline-danger' }}">
-                                    <i class="fas fa-ban"></i> Supprimer
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Annonce Details -->
-        <div class="col-lg-8">
-            <!-- Main Info Card -->
-            <div class="admin-card mb-4">
-                <div class="annonce-header">
-                    <div class="annonce-title-wrapper">
-                        <h2 class="annonce-title">{{ $annonce->titre }}</h2>
-                        <div class="annonce-meta">
-                            <span class="annonce-date">
-                                <i class="fas fa-calendar-alt"></i> Créée le {{ $annonce->created_at->format('d/m/Y à H:i') }}
-                            </span>
-                            <span class="annonce-price">
-                                <i class="fas fa-tag"></i> {{ number_format($annonce->prix, 2, ',', ' ') }} DH
-                            </span>
-                        </div>
                     </div>
                 </div>
                 
-                <div class="annonce-content">
-                    <div class="annonce-category-info">
-                        <div class="category-badge">
-                            <i class="fas fa-folder"></i> {{ $annonce->categorie->nom }}
-                            @if($annonce->sousCategorie)
-                                <span class="subcategory">→ {{ $annonce->sousCategorie->nom }}</span>
-                            @endif
+                <!-- Annonce Image -->
+                <div class="position-relative">
+                    @if($annonce->images->where('principale', true)->first())
+                        <img src="{{ asset($annonce->images->where('principale', true)->first()->url) }}" 
+                            class="w-100" alt="{{ $annonce->titre }}" style="height: 200px; object-fit: cover;">
+                    @else
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fas fa-image fa-3x text-secondary"></i>
                         </div>
-                        <div class="location-badge">
-                            <i class="fas fa-map-marker-alt"></i> {{ $annonce->ville->nom }}
+                    @endif
+                    
+                    <div class="position-absolute top-0 end-0 p-3">
+                        <span class="badge bg-dark px-3 py-2">
+                            <i class="fas fa-camera me-1"></i> {{ $annonce->images->count() }} images
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Annonce Details -->
+                <div class="card-body pt-4">
+                    <h4 class="mb-3">{{ $annonce->titre }}</h4>
+                    
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="badge bg-primary px-3 py-2 fs-6">
+                            {{ number_format($annonce->prix, 0, ',', ' ') }} DH
+                        </div>
+                        
+                        <div class="d-flex align-items-center">
+                            <div class="rating-stars me-2">
+                                @php
+                                    $avgRating = $annonce->getAverageRatingAttribute();
+                                @endphp
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= $avgRating)
+                                        <i class="fas fa-star text-warning"></i>
+                                    @elseif($i - 0.5 <= $avgRating)
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                    @else
+                                        <i class="far fa-star text-warning"></i>
+                                    @endif
+                                @endfor
+                            </div>
+                            <span class="text-muted">
+                                ({{ $annonce->reviews->count() }})
+                            </span>
                         </div>
                     </div>
                     
-                    <div class="annonce-description">
-                        <h3 class="section-title">Description</h3>
-                        <div class="description-content">
-                            {{ $annonce->description }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Images Card -->
-            <div class="admin-card mb-4">
-                <h3 class="section-title">Images</h3>
-                
-                @if($annonce->images->count() > 0)
-                    <div class="annonce-images">
-                        @foreach($annonce->images as $image)
-                            <div class="image-card {{ $image->principale ? 'image-main' : '' }}">
-                                <div class="image-wrapper">
-                                    <img src="{{ asset('storage/' . $image->url) }}" alt="Image de l'annonce" class="annonce-image">
-                                    @if($image->principale)
-                                        <div class="image-badge">Principale</div>
-                                    @endif
+                    <hr>
+                    
+                    <!-- Annonce Information -->
+                    <div class="mb-4">
+                        <h6 class="mb-3 text-uppercase fw-bold text-muted fs-sm">Détails</h6>
+                        
+                        <div class="row g-3 mb-2">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle bg-light text-primary me-2">
+                                        <i class="fas fa-tag"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Catégorie</div>
+                                        <div>{{ $annonce->categorie->nom }}</div>
+                                    </div>
                                 </div>
                             </div>
-                        @endforeach
+                            
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle bg-light text-primary me-2">
+                                        <i class="fas fa-list"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Sous-catégorie</div>
+                                        <div>{{ $annonce->sousCategorie->nom ?? 'N/A' }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle bg-light text-primary me-2">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Ville</div>
+                                        <div>{{ $annonce->ville->nom }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle bg-light text-primary me-2">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Date</div>
+                                        <div>{{ $annonce->created_at->format('d/m/Y') }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                @else
-                    <div class="no-content">
-                        <i class="fas fa-images no-content-icon"></i>
-                        <p>Aucune image disponible pour cette annonce</p>
-                    </div>
-                @endif
-            </div>
-            
-            <!-- Reports Card (if any) -->
-            @if($annonce->reports->count() > 0)
-                <div class="admin-card mb-4">
-                    <h3 class="section-title">
-                        Signalements
-                        <span class="badge rounded-pill bg-danger ms-2">{{ $annonce->reports->count() }}</span>
-                    </h3>
                     
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Type</th>
-                                    <th>Utilisateur</th>
-                                    <th>Date</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($annonce->reports as $report)
-                                    <tr>
-                                        <td>{{ $report->id }}</td>
-                                        <td>
-                                            @switch($report->type)
-                                                @case('fraude')
-                                                    <span class="badge bg-danger">Fraude</span>
-                                                    @break
-                                                @case('contenu_inapproprie')
-                                                    <span class="badge bg-danger">Contenu inapproprié</span>
-                                                    @break
-                                                @case('produit_interdit')
-                                                    <span class="badge bg-danger">Produit interdit</span>
-                                                    @break
-                                                @case('doublon')
-                                                    <span class="badge bg-warning text-dark">Doublon</span>
-                                                    @break
-                                                @case('mauvaise_categorie')
-                                                    <span class="badge bg-warning text-dark">Mauvaise catégorie</span>
-                                                    @break
-                                                @default
-                                                    <span class="badge bg-secondary">Autre</span>
-                                            @endswitch
-                                        </td>
-                                        <td>{{ $report->utilisateur ? $report->utilisateur->nom : 'Anonyme' }}</td>
-                                        <td>{{ $report->created_at->format('d/m/Y') }}</td>
-                                        <td>
-                                            @if($report->statut === 'traitee')
-                                                <span class="badge bg-success">Traité</span>
-                                            @elseif($report->statut === 'en_attente')
-                                                <span class="badge bg-warning text-dark">En attente</span>
-                                            @else
-                                                <span class="badge bg-danger">Rejeté</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('admin.reports.show', $report->id) }}" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <hr>
+                    
+                    <!-- User Information -->
+                    <div>
+                        <h6 class="mb-3 text-uppercase fw-bold text-muted fs-sm">Vendeur</h6>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-circle bg-primary text-white me-3">
+                                {{ strtoupper(substr($annonce->utilisateur->nom, 0, 1)) }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ $annonce->utilisateur->nom }}</h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-phone me-1"></i> {{ $annonce->utilisateur->telephon }}
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ route('admin.users.show', $annonce->utilisateur->id) }}" class="btn btn-sm btn-outline-primary w-100">
+                            <i class="fas fa-user me-1"></i> Voir le profil
+                        </a>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
         
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            <!-- Seller Info Card -->
-            <div class="admin-card mb-4">
-                <h3 class="section-title">Informations vendeur</h3>
+        <!-- Description & Reports & Reviews -->
+        <div class="col-xl-8 col-lg-7">
+            <!-- Description -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 text-primary">
+                        <i class="fas fa-file-alt me-2"></i>Description
+                    </h5>
+                </div>
                 
-                <div class="seller-profile">
-                    <div class="seller-avatar">
-                        {{ strtoupper(substr($annonce->utilisateur->nom, 0, 1)) }}
-                    </div>
-                    
-                    <div class="seller-name">
-                        {{ $annonce->utilisateur->nom }}
-                        <span class="seller-status 
-                            @if($annonce->utilisateur->statut === 'valide') status-dot-success
-                            @elseif($annonce->utilisateur->statut === 'en_attente') status-dot-warning
-                            @else status-dot-danger
-                            @endif">
-                        </span>
-                    </div>
-                    
-                    <div class="seller-contact">
-                        <div class="seller-info-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>{{ $annonce->utilisateur->email }}</span>
-                        </div>
-                        <div class="seller-info-item">
-                            <i class="fas fa-phone"></i>
-                            <span>{{ $annonce->utilisateur->telephon }}</span>
-                        </div>
-                        <div class="seller-info-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ $annonce->utilisateur->ville }}</span>
-                        </div>
-                        <div class="seller-info-item">
-                            <i class="fas fa-user-shield"></i>
-                            <span>
-                                @if($annonce->utilisateur->type_utilisateur === 'admin')
-                                    Administrateur
-                                @else
-                                    Utilisateur standard
-                                @endif
-                            </span>
-                        </div>
-                        <div class="seller-info-item">
-                            <i class="fas fa-user-clock"></i>
-                            <span>Inscrit le {{ date('d/m/Y', strtotime($annonce->utilisateur->date_inscription)) }}</span>
-                        </div>
-                    </div>
-                    
-                    <a href="{{ route('admin.users.show', $annonce->utilisateur->id) }}" class="btn btn-primary w-100 mt-3">
-                        <i class="fas fa-user"></i> Voir profil complet
-                    </a>
+                <div class="card-body">
+                    <p class="mb-0">{{ $annonce->description }}</p>
                 </div>
             </div>
             
-            <!-- Additional Info Card -->
-            <div class="admin-card">
-                <h3 class="section-title">Actions rapides</h3>
+            <!-- Reports -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-danger">
+                        <i class="fas fa-flag me-2"></i>Signalements
+                    </h5>
+                    <span class="badge bg-danger">{{ $annonce->reports->count() }}</span>
+                </div>
                 
-                <div class="quick-actions">
-                    @php
-                        $totalAnnonces = $annonce->utilisateur->annonces->count();
-                        $totalValidees = $annonce->utilisateur->annonces->where('statut', 'validee')->count();
-                        $totalEnAttente = $annonce->utilisateur->annonces->where('statut', 'en_attente')->count();
-                    @endphp
-                    
-                    <div class="seller-stats mb-3">
-                        <div class="stat-item">
-                            <div class="stat-value">{{ $totalAnnonces }}</div>
-                            <div class="stat-label">Annonces</div>
+                <div class="card-body p-0">
+                    @if($annonce->reports->count() > 0)
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-3">ID</th>
+                                        <th>Utilisateur</th>
+                                        <th>Type</th>
+                                        <th>Date</th>
+                                        <th>Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($annonce->reports as $report)
+                                        <tr>
+                                            <td class="ps-3 fw-medium">{{ $report->id }}</td>
+                                            <td>
+                                                @if($report->utilisateur)
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-xs bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center">
+                                                            {{ strtoupper(substr($report->utilisateur->nom, 0, 1)) }}
+                                                        </div>
+                                                        <div>{{ $report->utilisateur->nom }}</div>
+                                                    </div>
+                                                @else
+                                                    <span class="text-muted">Utilisateur anonyme</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span class="badge 
+                                                    @if($report->type === 'fraude') bg-danger
+                                                    @elseif($report->type === 'contenu_inapproprie') bg-warning text-dark
+                                                    @elseif($report->type === 'produit_interdit') bg-dark
+                                                    @elseif($report->type === 'doublon') bg-info
+                                                    @elseif($report->type === 'mauvaise_categorie') bg-secondary
+                                                    @else bg-primary @endif">
+                                                    {{ str_replace('_', ' ', ucfirst($report->type)) }}
+                                                </span>
+                                            </td>
+                                            <td>{{ $report->created_at->format('d/m/Y H:i') }}</td>
+                                            <td>
+                                                <span class="badge 
+                                                    @if($report->statut === 'traitee') bg-success
+                                                    @elseif($report->statut === 'en_attente') bg-warning text-dark
+                                                    @else bg-secondary @endif">
+                                                    {{ str_replace('_', ' ', ucfirst($report->statut)) }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="stat-item">
-                            <div class="stat-value">{{ $totalValidees }}</div>
-                            <div class="stat-label">Validées</div>
+                    @else
+                        <div class="empty-state p-5 text-center">
+                            <div class="empty-icon mb-3">
+                                <i class="fas fa-flag fa-3x text-muted"></i>
+                            </div>
+                            <h5>Aucun signalement</h5>
+                            <p class="text-muted">Cette annonce n'a pas encore été signalée.</p>
                         </div>
-                        <div class="stat-item">
-                            <div class="stat-value">{{ $totalEnAttente }}</div>
-                            <div class="stat-label">En attente</div>
+                    @endif
+                </div>
+            </div>
+            
+            <!-- Reviews -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-warning">
+                        <i class="fas fa-star me-2"></i>Avis
+                    </h5>
+                    <div class="d-flex align-items-center">
+                        <div class="rating-stars me-2">
+                            @php
+                                $avgRating = $annonce->getAverageRatingAttribute();
+                            @endphp
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= $avgRating)
+                                    <i class="fas fa-star text-warning"></i>
+                                @elseif($i - 0.5 <= $avgRating)
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                @else
+                                    <i class="far fa-star text-warning"></i>
+                                @endif
+                            @endfor
                         </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <a href="{{ route('details', $annonce->id) }}" target="_blank" class="btn btn-outline-primary w-100 mb-2">
-                            <i class="fas fa-external-link-alt"></i> Voir sur le site
-                        </a>
-                        
-                        <a href="{{ route('admin.annonces.index') }}?search={{ $annonce->utilisateur->nom }}" class="btn btn-outline-secondary w-100">
-                            <i class="fas fa-search"></i> Voir toutes les annonces de ce vendeur
-                        </a>
+                        <span class="badge bg-warning text-dark">{{ $annonce->reviews->count() }}</span>
                     </div>
                 </div>
+                
+                <div class="card-body p-0">
+                    @if($annonce->reviews->count() > 0)
+                        <div class="p-4">
+                            @foreach($annonce->reviews as $review)
+                                <div class="d-flex mb-4">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar-circle-sm bg-primary text-white">
+                                            {{ strtoupper(substr($review->utilisateur->nom, 0, 1)) }}
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">{{ $review->utilisateur->nom }}</h6>
+                                            <span class="badge 
+                                                @if($review->statut === 'approuve') bg-success
+                                                @elseif($review->statut === 'en_attente') bg-warning text-dark
+                                                @else bg-danger @endif">
+                                                {{ str_replace('_', ' ', ucfirst($review->statut)) }}
+                                            </span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="rating-stars me-2">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    @if($i <= $review->rating)
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    @else
+                                                        <i class="far fa-star text-warning"></i>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                            <span class="text-muted small">{{ $review->created_at->format('d/m/Y') }}</span>
+                                        </div>
+                                        <p class="mb-0">{{ $review->comment }}</p>
+                                    </div>
+                                </div>
+                                
+                                @if(!$loop->last)
+                                    <hr class="my-3">
+                                @endif
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="empty-state p-5 text-center">
+                            <div class="empty-icon mb-3">
+                                <i class="fas fa-star fa-3x text-muted"></i>
+                            </div>
+                            <h5>Aucun avis</h5>
+                            <p class="text-muted">Cette annonce n'a pas encore reçu d'avis.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            <!-------------------------------------->
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('css')
 <style>
-    /* General */
-    .mb-2 {
-        margin-bottom: 0.5rem !important;
-    }
-    
-    .mb-3 {
-        margin-bottom: 1rem !important;
-    }
-    
-    .mb-4 {
-        margin-bottom: 1.5rem !important;
-    }
-    
-    .mt-3 {
-        margin-top: 1rem !important;
-    }
-    
-    .ms-2 {
-        margin-left: 0.5rem !important;
-    }
-    
-    .w-100 {
-        width: 100%;
-    }
-    
-    .d-flex {
-        display: flex;
-    }
-    
-    .align-items-center {
-        align-items: center;
-    }
-    
-    .justify-content-between {
-        justify-content: space-between;
-    }
-    
-    .text-center {
-        text-align: center;
-    }
-    
-    .rounded-pill {
-        border-radius: 50rem !important;
-    }
-    
-    .badge {
-        display: inline-block;
-        padding: 0.35em 0.65em;
-        font-size: 0.75em;
-        font-weight: 700;
-        line-height: 1;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: baseline;
-        border-radius: 0.25rem;
-    }
-    
-    .bg-danger {
-        background-color: #ef4444 !important;
-        color: white;
-    }
-    
-    .bg-success {
-        background-color: #10b981 !important;
-        color: white;
-    }
-    
-    .bg-warning {
-        background-color: #f59e0b !important;
-    }
-    
-    .bg-secondary {
-        background-color: #64748b !important;
-        color: white;
-    }
-    
-    .bg-primary {
-        background-color: #3b82f6 !important;
-        color: white;
-    }
-    
-    .text-dark {
-        color: #1f2937 !important;
-    }
-    
-    /* Status dashboard */
-    .status-dashboard {
-        background: linear-gradient(to right, #f9fafb, #f3f4f6);
-        border-left: none;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    
-    .status-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .status-info {
+    /* Avatar and Icon Styles */
+    .avatar-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
-    }
-    
-    .status-label {
-        font-size: 16px;
-        color: #4b5563;
-        margin-right: 10px;
-        font-weight: 500;
-    }
-    
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 6px 12px;
-        border-radius: 5px;
+        justify-content: center;
         font-weight: 600;
-        font-size: 14px;
-    }
-    
-    .status-success {
-        background-color: #d1fae5;
-        color: #059669;
-    }
-    
-    .status-warning {
-        background-color: #fef3c7;
-        color: #d97706;
-    }
-    
-    .status-danger {
-        background-color: #fee2e2;
-        color: #dc2626;
-    }
-    
-    .status-icon {
-        margin-right: 6px;
-    }
-    
-    .status-actions {
-        display: flex;
-    }
-    
-    .status-buttons .btn {
-        padding: 8px 16px;
-        font-weight: 500;
-        border-radius: 0;
-        transition: all 0.2s;
-    }
-    
-    .status-buttons .btn:first-child {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-    }
-    
-    .status-buttons .btn:last-child {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-    }
-    
-    .status-buttons .btn.active {
-        font-weight: 600;
-    }
-    
-    .status-buttons .btn-outline-success:hover {
-        background-color: #10b981;
-        border-color: #10b981;
-        color: white;
-    }
-    
-    .status-buttons .btn-outline-warning:hover {
-        background-color: #f59e0b;
-        border-color: #f59e0b;
-        color: white;
-    }
-    
-    .status-buttons .btn-outline-danger:hover {
-        background-color: #ef4444;
-        border-color: #ef4444;
-        color: white;
-    }
-    
-    /* Annonce details */
-    .annonce-header {
-        margin-bottom: 20px;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 20px;
-    }
-    
-    .annonce-title-wrapper {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .annonce-title {
-        margin: 0 0 10px 0;
-        font-size: 24px;
-        font-weight: 700;
-        color: #1f2937;
-    }
-    
-    .annonce-meta {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    
-    .annonce-date, .annonce-price {
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-    }
-    
-    .annonce-date i, .annonce-price i {
-        margin-right: 5px;
-        color: #6b7280;
-    }
-    
-    .annonce-date {
-        color: #6b7280;
-    }
-    
-    .annonce-price {
-        font-weight: 600;
-        color: #2563eb;
-    }
-    
-    .annonce-category-info {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-    
-    .category-badge, .location-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 6px 12px;
-        border-radius: 5px;
-        background-color: #f3f4f6;
-        color: #4b5563;
-        font-size: 14px;
-    }
-    
-    .category-badge i, .location-badge i {
-        margin-right: 5px;
-    }
-    
-    .category-badge {
-        background-color: #eff6ff;
-        color: #2563eb;
-    }
-    
-    .category-badge .subcategory {
-        margin-left: 5px;
-        font-weight: 400;
-        font-size: 12px;
-        opacity: 0.8;
-    }
-    
-    .location-badge {
-        background-color: #f3f4f6;
-        color: #4b5563;
-    }
-    
-    .section-title {
         font-size: 18px;
+    }
+    
+    .avatar-circle-sm {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-weight: 600;
-        margin: 0 0 15px 0;
-        color: #1f2937;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #e5e7eb;
+        font-size: 14px;
     }
     
-    .annonce-description {
-        margin-top: 20px;
+    .avatar-xs {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
     }
     
-    .description-content {
-        color: #4b5563;
-        line-height: 1.6;
-        white-space: pre-line;
+    .icon-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
     }
     
-    /* Images section */
-    .annonce-images {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 15px;
-    }
-    
-    .image-card {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s, box-shadow 0.2s;
-        position: relative;
-    }
-    
-    .image-card.image-main {
-        grid-column: span 2;
-        grid-row: span 2;
-    }
-    
-    .image-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .image-wrapper {
-        position: relative;
-        width: 100%;
-        padding-top: 75%; /* 4:3 aspect ratio */
+    /* Card Styles */
+    .card {
+        border-radius: 0.75rem;
         overflow: hidden;
     }
     
-    .annonce-image {
-        position: absolute;
-        top: 0;
-        left: 0;
+    .card-header {
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    /* Table Styles */
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .table td {
+        vertical-align: middle;
+        padding: 0.75rem 0.5rem;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        padding: 3rem;
+    }
+    
+    .empty-icon {
+        opacity: 0.3;
+    }
+    
+    /* Rating Stars */
+    .rating-stars {
+        font-size: 0.8rem;
+    }
+    
+    /* Small Font Size */
+    .fs-sm {
+        font-size: 0.875rem;
+    }
+    
+    /* Background Color for Card Header */
+    .bg-primary {
+        background-color: #0d6efd !important;
+    }
+    
+    /* Image Gallery */
+    .gallery-item {
+        position: relative;
+        height: 150px;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .gallery-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
     
-    .image-badge {
+    .gallery-item-overlay {
         position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: rgba(37, 99, 235, 0.8);
-        color: white;
-        font-size: 12px;
-        font-weight: 500;
-        padding: 3px 8px;
-        border-radius: 3px;
-        z-index: 1;
-    }
-    
-    .no-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 30px;
-        color: #9ca3af;
-        text-align: center;
-    }
-    
-    .no-content-icon {
-        font-size: 48px;
-        margin-bottom: 10px;
-    }
-    
-    /* Seller profile */
-    .seller-profile {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 15px 0;
-    }
-    
-    .seller-avatar {
-        width: 80px;
-        height: 80px;
-        background-color: #3b82f6;
-        color: white;
-        font-size: 32px;
-        font-weight: bold;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
-        margin-bottom: 15px;
+        color: white;
+        font-size: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.3s;
     }
     
-    .seller-name {
-        font-size: 18px;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-    }
-    
-    .status-dot-success, .status-dot-warning, .status-dot-danger {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin-left: 8px;
-    }
-    
-    .status-dot-success {
-        background-color: #10b981;
-    }
-    
-    .status-dot-warning {
-        background-color: #f59e0b;
-    }
-    
-    .status-dot-danger {
-        background-color: #ef4444;
-    }
-    
-    .seller-contact {
-        width: 100%;
-        margin-top: 15px;
-    }
-    
-    .seller-info-item {
-        display: flex;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid #f3f4f6;
-    }
-    
-    .seller-info-item:last-child {
-        border-bottom: none;
-    }
-    
-    .seller-info-item i {
-        width: 20px;
-        color: #6b7280;
-        margin-right: 10px;
-    }
-    
-    .seller-info-item span {
-        color: #4b5563;
-        word-break: break-all;
-    }
-    
-    /* Stats and quick actions */
-    .seller-stats {
-        display: flex;
-        justify-content: space-between;
-        text-align: center;
-        border-radius: 5px;
-        overflow: hidden;
-        margin-bottom: 15px;
-    }
-    
-    .stat-item {
-        flex: 1;
-        padding: 10px;
-        background-color: #f9fafb;
-        border: 1px solid #e5e7eb;
-    }
-    
-    .stat-item:not(:last-child) {
-        border-right: none;
-    }
-    
-    .stat-value {
-        font-size: 24px;
-        font-weight: 700;
-        color: #1f2937;
-    }
-    
-    .stat-label {
-        font-size: 12px;
-        color: #6b7280;
-        margin-top: 5px;
-    }
-    
-    /* Button styles */
-    .btn {
-        display: inline-block;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #212529;
-        text-align: center;
-        text-decoration: none;
-        vertical-align: middle;
-        cursor: pointer;
-        user-select: none;
-        background-color: transparent;
-        border: 1px solid transparent;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        border-radius: 0.25rem;
-        transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
-    }
-    
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-        border-radius: 0.2rem;
-    }
-    
-    .btn-primary {
-        color: #fff;
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
-    
-    .btn-primary:hover {
-        color: #fff;
-        background-color: #0b5ed7;
-        border-color: #0a58ca;
-    }
-    
-    .btn-outline-primary {
-        color: #0d6efd;
-        border-color: #0d6efd;
-    }
-    
-    .btn-outline-primary:hover {
-        color: #fff;
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
-    
-    .btn-outline-secondary {
-        color: #6c757d;
-        border-color: #6c757d;
-    }
-    
-    .btn-outline-secondary:hover {
-        color: #fff;
-        background-color: #6c757d;
-        border-color: #6c757d;
-    }
-    
-    .btn-success {
-        color: #fff;
-        background-color: #10b981;
-        border-color: #10b981;
-    }
-    
-    .btn-success:hover {
-        color: #fff;
-        background-color: #0ca678;
-        border-color: #099268;
-    }
-    
-    .btn-outline-success {
-        color: #10b981;
-        border-color: #10b981;
-    }
-    
-    .btn-outline-success:hover {
-        color: #fff;
-        background-color: #10b981;
-        border-color: #10b981;
-    }
-    
-    .btn-warning {
-        color: #000;
-        background-color: #f59e0b;
-        border-color: #f59e0b;
-    }
-    
-    .btn-warning:hover {
-        color: #000;
-        background-color: #ffca2c;
-        border-color: #ffc720;
-    }
-    
-    .btn-outline-warning {
-        color: #f59e0b;
-        border-color: #f59e0b;
-    }
-    
-    .btn-outline-warning:hover {
-        color: #000;
-        background-color: #f59e0b;
-        border-color: #f59e0b;
-    }
-    
-    .btn-danger {
-        color: #fff;
-        background-color: #ef4444;
-        border-color: #ef4444;
-    }
-    
-    .btn-danger:hover {
-        color: #fff;
-        background-color: #bb2d3b;
-        border-color: #b02a37;
-    }
-    
-    .btn-outline-danger {
-        color: #ef4444;
-        border-color: #ef4444;
-    }
-    
-    .btn-outline-danger:hover {
-        color: #fff;
-        background-color: #ef4444;
-        border-color: #ef4444;
-    }
-    
-    .btn-group {
-        position: relative;
-        display: inline-flex;
-        vertical-align: middle;
-    }
-    
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Responsive styles */
-    @media (max-width: 992px) {
-        .status-content {
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .status-info {
-            margin-bottom: 10px;
-        }
-        
-        .seller-avatar {
-            width: 70px;
-            height: 70px;
-            font-size: 28px;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .admin-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .admin-header-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-        
-        .admin-header-actions .admin-button {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .annonce-images {
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        }
-        
-        .image-card.image-main {
-            grid-column: span 1;
-            grid-row: span 1;
-        }
-        
-        .seller-stats {
-            flex-direction: column;
-        }
-        
-        .stat-item:not(:last-child) {
-            border-right: 1px solid #e5e7eb;
-            border-bottom: none;
-        }
-        
-        .status-buttons .btn {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .status-buttons {
-            flex-direction: column;
-            width: 100%;
-        }
-        
-        .status-buttons .btn {
-            width: 100%;
-            margin-bottom: 5px;
-            border-radius: 4px !important;
-        }
-        
-        .status-buttons .btn:not(:last-child) {
-            margin-bottom: 5px;
-        }
-        
-        .annonce-meta {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-        }
-        
-        .annonce-category-info {
-            flex-direction: column;
-            gap: 5px;
-        }
-        
-        .annonce-images {
-            grid-template-columns: 1fr;
-        }
+    .gallery-item:hover .gallery-item-overlay {
+        opacity: 1;
     }
 </style>
 @endsection

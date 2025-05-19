@@ -2,28 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Annonce;
 use App\Models\Categorie;
-use App\Models\SousCategorie;
-use App\Models\Ville;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class AdminAnnonceController extends AdminController
+class AdminAnnonceController extends Controller
 {
     /**
-     * Display a listing of the announcements
+     * Display a listing of the annonces
      */
     public function index(Request $request)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
-        $query = Annonce::with(['utilisateur', 'categorie', 'ville', 'sousCategorie']);
+        $query = Annonce::with(['categorie', 'sousCategorie', 'utilisateur', 'ville', 'images', 'reports', 'reviews']);
         
         // Apply search filter
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('titre', 'like', "%{$search}%")
@@ -32,31 +26,13 @@ class AdminAnnonceController extends AdminController
         }
         
         // Apply status filter
-        if ($request->has('statut') && $request->statut != '') {
+        if ($request->filled('statut')) {
             $query->where('statut', $request->statut);
         }
         
         // Apply category filter
-        if ($request->has('categorie') && $request->categorie != '') {
+        if ($request->filled('categorie')) {
             $query->where('id_categorie', $request->categorie);
-        }
-        
-        // Apply price range filter
-        if ($request->has('prix_min') && $request->prix_min != '') {
-            $query->where('prix', '>=', $request->prix_min);
-        }
-        
-        if ($request->has('prix_max') && $request->prix_max != '') {
-            $query->where('prix', '<=', $request->prix_max);
-        }
-        
-        // Apply date range filter
-        if ($request->has('date_debut') && $request->date_debut != '') {
-            $query->whereDate('created_at', '>=', $request->date_debut);
-        }
-        
-        if ($request->has('date_fin') && $request->date_fin != '') {
-            $query->whereDate('created_at', '<=', $request->date_fin);
         }
         
         // Apply sorting
@@ -65,116 +41,71 @@ class AdminAnnonceController extends AdminController
         $query->orderBy($sortField, $sortDirection);
         
         $annonces = $query->paginate(15);
-        
-        // Get all categories and cities for the filters
         $categories = Categorie::all();
-        $villes = Ville::all();
         
-        return view('admin.annonces.index', compact('annonces', 'categories', 'villes'));
+        return view('admin.annonces.index', compact('annonces', 'categories'));
     }
     
     /**
-     * Show details of an announcement
+     * Display the specified annonce
      */
     public function show($id)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $annonce = Annonce::with([
-            'utilisateur', 
             'categorie', 
             'sousCategorie', 
+            'utilisateur', 
             'ville', 
-            'images',
-            'reports'
+            'images', 
+            'reports.utilisateur', 
+            'reviews.utilisateur'
         ])->findOrFail($id);
         
         return view('admin.annonces.show', compact('annonce'));
     }
-    
+
     /**
-     * Update the specified annonce status
+     * Update annonce status
      */
     public function updateStatus(Request $request, $id)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $annonce = Annonce::findOrFail($id);
         
-        $validator = Validator::make($request->all(), [
-            'statut' => 'required|in:en_attente,validee,supprimee',
+        // Validate request
+        $request->validate([
+            'statut' => 'required|in:validee,en_attente,supprimee',
         ]);
         
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        
+        // Update annonce
         $annonce->statut = $request->statut;
         $annonce->save();
         
-        return redirect()->route('admin.annonces.show', $annonce->id)
-            ->with('success', 'Statut de l\'annonce mis à jour avec succès.');
+        return redirect()->back()->with('success', 'Statut de l\'annonce mis à jour avec succès.');
     }
     
     /**
-     * Mark the announcement as deleted
-     */
-    public function destroy($id)
-    {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
-        $annonce = Annonce::findOrFail($id);
-        $annonce->statut = 'supprimee';
-        $annonce->save();
-        
-        return redirect()->route('admin.annonces.index')
-            ->with('success', 'Annonce supprimée avec succès.');
-    }
-    
-    /**
-     * Approve a pending announcement
+     * Approve an annonce
      */
     public function approve($id)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $annonce = Annonce::findOrFail($id);
-        
-        if ($annonce->statut !== 'en_attente') {
-            return redirect()->route('admin.annonces.show', $annonce->id)
-                ->with('error', 'Cette annonce n\'est pas en attente d\'approbation.');
-        }
-        
         $annonce->statut = 'validee';
         $annonce->save();
         
-        return redirect()->route('admin.annonces.show', $annonce->id)
-            ->with('success', 'Annonce approuvée avec succès.');
+        return redirect()->back()->with('success', 'Annonce approuvée avec succès.');
     }
     
     /**
-     * Redirect edit requests to show
+     * Remove the specified annonce
      */
-    public function edit($id)
+    public function destroy($id)
     {
-        return redirect()->route('admin.annonces.show', $id);
-    }
-    
-    /**
-     * Redirect update requests to updateStatus
-     */
-    public function update(Request $request, $id)
-    {
-        return $this->updateStatus($request, $id);
+        $annonce = Annonce::findOrFail($id);
+        
+        // Instead of deleting, mark the annonce as 'supprimee'
+        $annonce->statut = 'supprimee';
+        $annonce->save();
+        
+        return redirect()->route('admin.annonces.index')->with('success', 'Annonce supprimée avec succès.');
     }
 }

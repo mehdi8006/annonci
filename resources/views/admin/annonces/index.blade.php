@@ -1,385 +1,281 @@
-<!-- resources/views/admin/annonces/index.blade.php -->
 @extends('admin.layouts.app')
 
 @section('title', 'Gestion des annonces')
 
 @section('content')
-    <div class="admin-header">
-        <h1>Gestion des annonces</h1>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Liste des annonces</h1>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fas fa-filter me-1"></i> Filtrer
+            </button>
+        </div>
     </div>
 
-    <div class="admin-card">
-        <form action="{{ route('admin.annonces.index') }}" method="GET" class="mb-4">
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <div class="admin-form-group">
-                        <label for="search" class="admin-form-label">Recherche</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input type="text" id="search" name="search" class="admin-form-input" placeholder="Titre, description..." value="{{ request('search') }}">
+    <!-- Filter Modal -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title">Filtrer les annonces</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('admin.annonces.index') }}" method="GET" id="filterForm">
+                        <div class="mb-3">
+                            <label for="search" class="form-label">Recherche</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" id="search" name="search" class="form-control" placeholder="Titre, description..." value="{{ request('search') }}">
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="admin-form-group">
-                        <label for="statut" class="admin-form-label">Statut</label>
-                        <select id="statut" name="statut" class="admin-form-select">
-                            <option value="">Tous les statuts</option>
-                            <option value="en_attente" {{ request('statut') === 'en_attente' ? 'selected' : '' }}>En attente</option>
-                            <option value="validee" {{ request('statut') === 'validee' ? 'selected' : '' }}>Validée</option>
-                            <option value="supprimee" {{ request('statut') === 'supprimee' ? 'selected' : '' }}>Supprimée</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="admin-form-group">
-                        <label for="categorie" class="admin-form-label">Catégorie</label>
-                        <select id="categorie" name="categorie" class="admin-form-select">
-                            <option value="">Toutes les catégories</option>
-                            @foreach($categories as $categorie)
-                                <option value="{{ $categorie->id }}" {{ request('categorie') == $categorie->id ? 'selected' : '' }}>{{ $categorie->nom }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="admin-form-group">
-                        <label for="prix_min" class="admin-form-label">Prix min (DH)</label>
-                        <input type="number" id="prix_min" name="prix_min" class="admin-form-input" placeholder="Min" value="{{ request('prix_min') }}">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="admin-form-group">
-                        <label for="prix_max" class="admin-form-label">Prix max (DH)</label>
-                        <input type="number" id="prix_max" name="prix_max" class="admin-form-input" placeholder="Max" value="{{ request('prix_max') }}">
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="admin-form-group">
-                        <label class="admin-form-label d-block">&nbsp;</label>
-                        <button type="submit" class="admin-button w-100">
-                            Filtrer
-                        </button>
-                    </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="statut" class="form-label">Statut</label>
+                                <select id="statut" name="statut" class="form-select">
+                                    <option value="">Tous les statuts</option>
+                                    <option value="en_attente" {{ request('statut') === 'en_attente' ? 'selected' : '' }}>En attente</option>
+                                    <option value="validee" {{ request('statut') === 'validee' ? 'selected' : '' }}>Validée</option>
+                                    <option value="supprimee" {{ request('statut') === 'supprimee' ? 'selected' : '' }}>Supprimée</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="categorie" class="form-label">Catégorie</label>
+                                <select id="categorie" name="categorie" class="form-select">
+                                    <option value="">Toutes les catégories</option>
+                                    @foreach($categories as $categorie)
+                                        <option value="{{ $categorie->id }}" {{ request('categorie') == $categorie->id ? 'selected' : '' }}>
+                                            {{ $categorie->nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="text-end">
+                            <a href="{{ route('admin.annonces.index') }}" class="btn btn-outline-secondary me-2">Réinitialiser</a>
+                            <button type="submit" class="btn btn-primary">Appliquer</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </form>
-
-        <div class="table-responsive">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th class="text-center" style="width: 70px;">ID</th>
-                        <th>Annonce</th>
-                        <th>Catégorie</th>
-                        <th>Prix</th>
-                        <th class="text-center">Utilisateur</th>
-                        <th class="text-center">Statut</th>
-                        <th class="text-center">Date</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($annonces as $annonce)
-                        <tr>
-                            <td class="text-center">{{ $annonce->id }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="annonce-img-container me-2">
-                                        @if($annonce->images->where('principale', true)->first())
-                                            <img src="{{ asset('storage/' . $annonce->images->where('principale', true)->first()->url) }}" alt="Image principale" class="annonce-thumbnail">
-                                        @elseif($annonce->images->first())
-                                            <img src="{{ asset('storage/' . $annonce->images->first()->url) }}" alt="Image" class="annonce-thumbnail">
-                                        @else
-                                            <div class="annonce-no-img"><i class="fas fa-image"></i></div>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <div class="annonce-title">{{ $annonce->titre }}</div>
-                                        <div class="annonce-location"><i class="fas fa-map-marker-alt"></i> {{ $annonce->ville->nom }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="annonce-category">{{ $annonce->categorie->nom }}</span>
-                                @if($annonce->sousCategorie)
-                                    <span class="annonce-subcategory">{{ $annonce->sousCategorie->nom }}</span>
-                                @endif
-                            </td>
-                            <td><span class="annonce-price">{{ number_format($annonce->prix, 2, ',', ' ') }} DH</span></td>
-                            <td class="text-center">
-                                <a href="{{ route('admin.users.show', $annonce->id_utilisateur) }}" class="annonce-user">
-                                    {{ $annonce->utilisateur->nom }}
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                <div class="status-selector">
-                                    <form action="{{ route('admin.annonces.updateStatus', $annonce->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="btn-group status-buttons" role="group">
-                                            <button type="submit" name="statut" value="validee" class="btn btn-sm {{ $annonce->statut === 'validee' ? 'btn-success active' : 'btn-outline-success' }}" title="Valider">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button type="submit" name="statut" value="en_attente" class="btn btn-sm {{ $annonce->statut === 'en_attente' ? 'btn-warning active' : 'btn-outline-warning' }}" title="En attente">
-                                                <i class="fas fa-clock"></i>
-                                            </button>
-                                            <button type="submit" name="statut" value="supprimee" class="btn btn-sm {{ $annonce->statut === 'supprimee' ? 'btn-danger active' : 'btn-outline-danger' }}" title="Supprimer">
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </td>
-                            <td class="text-center">{{ $annonce->created_at->format('d/m/Y') }}</td>
-                            <td class="text-center">
-                                <div class="action-buttons">
-                                    <a href="{{ route('admin.annonces.show', $annonce->id) }}" class="admin-button" title="Voir les détails">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('details', $annonce->id) }}" target="_blank" class="admin-button admin-button-secondary" title="Voir sur le site">
-                                        <i class="fas fa-external-link-alt"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
-        <div class="admin-pagination mt-4">
-            {{ $annonces->appends(request()->query())->links() }}
         </div>
     </div>
+
+    <!-- Active Filters -->
+    @if(request('search') || request('statut') || request('categorie'))
+        <div class="alert alert-light border d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <i class="fas fa-filter me-2 text-primary"></i> 
+                <strong>Filtres: </strong>
+                @if(request('search'))<span class="badge bg-primary me-2">Recherche: {{ request('search') }}</span>@endif
+                @if(request('statut'))<span class="badge bg-primary me-2">Statut: {{ request('statut') }}</span>@endif
+                @if(request('categorie'))
+                    @php
+                        $categorieNom = App\Models\Categorie::find(request('categorie'))->nom ?? '';
+                    @endphp
+                    <span class="badge bg-primary me-2">Catégorie: {{ $categorieNom }}</span>
+                @endif
+            </div>
+            <a href="{{ route('admin.annonces.index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-times me-1"></i> Effacer
+            </a>
+        </div>
+    @endif
+
+    <!-- Annonces Table -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-3" width="5%">ID</th>
+                            <th width="35%">Annonce</th>
+                            <th width="15%">Statut</th>
+                            <th width="10%" class="text-center">Reports</th>
+                            <th width="15%" class="text-center">Reviews</th>
+                            <th width="10%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($annonces as $annonce)
+                            <tr>
+                                <td class="ps-3 fw-medium">{{ $annonce->id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                       
+                                        <div>
+                                            <h6 class="mb-0">{{ Str::limit($annonce->titre, 40) }}</h6>
+                                          
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm dropdown-toggle 
+                                            @if($annonce->statut === 'validee') btn-light-success
+                                            @elseif($annonce->statut === 'en_attente') btn-light-warning
+                                            @else btn-light-danger @endif" 
+                                            type="button" data-bs-toggle="dropdown">
+                                            @if($annonce->statut === 'validee')
+                                                <i class="fas fa-check-circle me-1"></i> Validée
+                                            @elseif($annonce->statut === 'en_attente')
+                                                <i class="fas fa-clock me-1"></i> En attente
+                                            @else
+                                                <i class="fas fa-ban me-1"></i> Supprimée
+                                            @endif
+                                        </button>
+                                        <ul class="dropdown-menu shadow-sm border-0">
+                                            <li>
+                                                <form action="{{ route('admin.annonces.updateStatus', $annonce->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="statut" value="validee">
+                                                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                                                        <i class="fas fa-check-circle me-2 text-success"></i> Valider
+                                                    </button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form action="{{ route('admin.annonces.updateStatus', $annonce->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="statut" value="en_attente">
+                                                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                                                        <i class="fas fa-clock me-2 text-warning"></i> En attente
+                                                    </button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form action="{{ route('admin.annonces.updateStatus', $annonce->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="statut" value="supprimee">
+                                                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                                                        <i class="fas fa-ban me-2 text-danger"></i> Supprimer
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-danger">
+                                        {{ $annonce->reports->count() }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <span class="badge bg-info me-2">
+                                            {{ $annonce->reviews->count() }}
+                                        </span>
+                                        @if($annonce->reviews->count() > 0)
+                                            <div class="rating-stars">
+                                                @php
+                                                    $avgRating = $annonce->getAverageRatingAttribute();
+                                                @endphp
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    @if($i <= $avgRating)
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    @elseif($i - 0.5 <= $avgRating)
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    @else
+                                                        <i class="far fa-star text-warning"></i>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                        @else
+                                            <span class="text-muted small">Aucun</span>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.annonces.show', $annonce->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye me-1"></i> Voir
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+        {{ $annonces->appends(request()->query())->links() }}
+    </div>
+</div>
 @endsection
 
 @section('css')
 <style>
-    /* General improvements */
-    .w-100 {
-        width: 100%;
+    /* Light Button Variants */
+    .btn-light-primary {
+        background-color: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+        border: none;
     }
     
-    .mb-4 {
-        margin-bottom: 1.5rem;
+    .btn-light-secondary {
+        background-color: rgba(108, 117, 125, 0.1);
+        color: #6c757d;
+        border: none;
     }
     
-    .mt-4 {
-        margin-top: 1.5rem;
+    .btn-light-success {
+        background-color: rgba(25, 135, 84, 0.1);
+        color: #198754;
+        border: none;
     }
     
-    .text-center {
-        text-align: center;
+    .btn-light-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: none;
     }
     
-    .d-flex {
-        display: flex;
+    .btn-light-warning {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+        border: none;
     }
     
-    .d-inline {
-        display: inline;
+    /* Dropdown Styling */
+    .dropdown-menu {
+        padding: 0.5rem 0;
+        border-radius: 0.375rem;
     }
     
-    .d-block {
-        display: block;
+    .dropdown-item {
+        padding: 0.5rem 1rem;
     }
     
-    .align-items-center {
-        align-items: center;
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
     }
     
-    .me-2 {
-        margin-right: 0.5rem;
-    }
-    
-    /* Annonce styles */
-    .annonce-img-container {
-        width: 50px;
-        height: 50px;
-        overflow: hidden;
-        border-radius: 6px;
-        background-color: #f3f4f6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .annonce-thumbnail {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .annonce-no-img {
-        color: #9ca3af;
-        font-size: 20px;
-    }
-    
-    .annonce-title {
+    /* Table Styling */
+    .table th {
         font-weight: 600;
-        line-height: 1.2;
-        max-width: 250px;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .table td {
+        vertical-align: middle;
+        padding: 0.75rem 0.5rem;
+    }
+    
+    /* Rating Stars */
+    .rating-stars {
+        font-size: 0.8rem;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .annonce-location {
-        font-size: 12px;
-        color: #6b7280;
-    }
-    
-    .annonce-location i {
-        font-size: 10px;
-        margin-right: 3px;
-    }
-    
-    .annonce-category {
-        display: block;
-        font-weight: 500;
-    }
-    
-    .annonce-subcategory {
-        display: block;
-        font-size: 12px;
-        color: #6b7280;
-    }
-    
-    .annonce-price {
-        font-weight: 600;
-        color: #2563eb;
-    }
-    
-    .annonce-user {
-        color: #4b5563;
-        text-decoration: none;
-        font-weight: 500;
-    }
-    
-    .annonce-user:hover {
-        color: #2563eb;
-        text-decoration: underline;
-    }
-    
-    /* Status buttons */
-    .status-selector {
-        display: flex;
-        justify-content: center;
-    }
-    
-    .status-buttons .btn {
-        padding: 0.25rem 0.5rem;
-        border-radius: 0;
-    }
-    
-    .status-buttons .btn:first-child {
-        border-top-left-radius: 0.25rem;
-        border-bottom-left-radius: 0.25rem;
-    }
-    
-    .status-buttons .btn:last-child {
-        border-top-right-radius: 0.25rem;
-        border-bottom-right-radius: 0.25rem;
-    }
-    
-    .status-buttons .btn.active {
-        font-weight: 600;
-    }
-    
-    /* Action buttons */
-    .action-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-    }
-    
-    .action-buttons .admin-button {
-        padding: 5px 10px;
-    }
-    
-    /* Pagination styles */
-    .pagination {
-        display: flex;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        justify-content: center;
-    }
-    
-    .page-item {
-        margin: 0 5px;
-    }
-    
-    .page-link {
-        display: block;
-        padding: 0.5rem 0.75rem;
-        line-height: 1.25;
-        color: #3b82f6;
-        background-color: #fff;
-        border: 1px solid #e2e8f0;
-        border-radius: 0.25rem;
-        text-decoration: none;
-        transition: all 0.2s;
-    }
-    
-    .page-item.active .page-link {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
-        color: white;
-    }
-    
-    .page-item.disabled .page-link {
-        color: #a0aec0;
-        pointer-events: none;
-        cursor: auto;
-    }
-    
-    .page-link:hover {
-        background-color: #f3f4f6;
-        border-color: #e2e8f0;
-        color: #2563eb;
-    }
-    
-    /* Filter improvements */
-    .input-group {
-        display: flex;
-        position: relative;
-    }
-    
-    .input-group-text {
-        display: flex;
-        align-items: center;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #6b7280;
-        text-align: center;
-        white-space: nowrap;
-        background-color: #f9fafb;
-        border: 1px solid #d1d5db;
-        border-right: none;
-        border-radius: 0.25rem 0 0 0.25rem;
-    }
-    
-    .input-group .admin-form-input {
-        border-radius: 0 0.25rem 0.25rem 0;
-    }
-    
-    /* Responsive grid */
-    .g-3 {
-        --bs-gutter-x: 1rem;
-        --bs-gutter-y: 1rem;
-        margin-top: calc(-1 * var(--bs-gutter-y));
-        margin-right: calc(-.5 * var(--bs-gutter-x));
-        margin-left: calc(-.5 * var(--bs-gutter-x));
-    }
-    
-    .g-3 > * {
-        padding-right: calc(var(--bs-gutter-x) * .5);
-        padding-left: calc(var(--bs-gutter-x) * .5);
-        margin-top: var(--bs-gutter-y);
     }
 </style>
 @endsection
