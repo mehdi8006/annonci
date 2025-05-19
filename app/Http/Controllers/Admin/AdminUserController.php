@@ -51,5 +51,82 @@ class AdminUserController extends AdminController
         return view('admin.users.index', compact('users'));
     }
     
-    // Rest of the controller remains the same...
+    /**
+     * Display the specified user
+     */
+    public function show($id)
+    {
+        if ($redirect = $this->checkAdmin()) {
+            return $redirect;
+        }
+        
+        $user = Utilisateur::findOrFail($id);
+        
+        return view('admin.users.show', compact('user'));
+    }
+
+    /**
+     * Update user status and type
+     */
+    public function updateStatusAndType(Request $request, $id)
+    {
+        if ($redirect = $this->checkAdmin()) {
+            return $redirect;
+        }
+        
+        $user = Utilisateur::findOrFail($id);
+        
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'statut' => 'required|in:valide,en_attente,supprime',
+            'type_utilisateur' => 'required|in:admin,normal',
+        ]);
+        
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        
+        // Update user
+        $user->statut = $request->statut;
+        $user->type_utilisateur = $request->type_utilisateur;
+        $user->save();
+        
+        return redirect()->back()->with('success', 'Utilisateur mis à jour avec succès.');
+    }
+    
+    /**
+     * Approve a user
+     */
+    public function approve($id)
+    {
+        if ($redirect = $this->checkAdmin()) {
+            return $redirect;
+        }
+        
+        $user = Utilisateur::findOrFail($id);
+        $user->statut = 'valide';
+        $user->save();
+        
+        return redirect()->back()->with('success', 'Utilisateur approuvé avec succès.');
+    }
+    
+    /**
+     * Remove the specified user
+     */
+    public function destroy($id)
+    {
+        if ($redirect = $this->checkAdmin()) {
+            return $redirect;
+        }
+        
+        $user = Utilisateur::findOrFail($id);
+        
+        // Instead of deleting, we mark the user as 'supprime'
+        $user->statut = 'supprime';
+        $user->save();
+        
+        return redirect()->route('admin.users.index')->with('success', 'Utilisateur supprimé avec succès.');
+    }
 }
