@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Categorie;
 use App\Models\Ville;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\View; // This import is missing
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+         
          View::composer('*', function ($view) {
             $villes = Ville::orderBy('nom')->get();
             $categories = Categorie::with('sousCategories')->orderBy('nom')->get();
@@ -29,6 +31,5 @@ class AppServiceProvider extends ServiceProvider
             $view->with('navVilles', $villes);
             $view->with('navCategories', $categories);
         });
-        //
     }
 }
