@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ReviewController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -63,3 +66,9 @@ Route::get('/annonces/{id}/report', [App\Http\Controllers\ReportController::clas
 Route::post('/annonces/{id}/report', [App\Http\Controllers\ReportController::class, 'storeReport'])->name('annonces.report.store');
 // Email Verification Route
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('email.verify');
+// Add these routes to your existing web.php file
+
+// Review Routes
+Route::get('/annonces/{id}/reviews', [ReviewController::class, 'showAnnonceReviews'])->name('annonces.reviews');
+Route::get('/annonces/{id}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
+Route::post('/annonces/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');

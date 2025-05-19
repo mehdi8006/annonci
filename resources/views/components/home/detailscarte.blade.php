@@ -727,6 +727,83 @@
             
             <div class="product-info4">
                 <h1 class="product-title4">{{ $ad->titre }}</h1>
+                <!-- Add this after the product title in your detailscarte.blade.php file -->
+<div class="product-rating4">
+    <div class="rating-stars">
+        @for($i = 1; $i <= 5; $i++)
+            @if($i <= round($ad->average_rating))
+                <i class="fas fa-star"></i>
+            @elseif($i - 0.5 <= $ad->average_rating)
+                <i class="fas fa-star-half-alt"></i>
+            @else
+                <i class="far fa-star"></i>
+            @endif
+        @endfor
+    </div>
+    <a href="{{ route('annonces.reviews', $ad->id) }}" class="reviews-link">
+        {{ number_format($ad->average_rating, 1) }} ({{ $ad->reviews_count }} avis)
+    </a>
+</div>
+
+<!-- Add this to your CSS section -->
+<style>
+    .product-rating4 {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .rating-stars {
+        color: #f39c12;
+        font-size: 18px;
+        margin-right: 10px;
+    }
+    
+    .reviews-link {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .reviews-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<!-- Also add this to the actions section -->
+@if(session()->has('user_id') && $ad->id_utilisateur != session('user_id'))
+    <a href="{{ route('reviews.create', $ad->id) }}" class="review-button44">
+        <i class="fas fa-star"></i>
+        Laisser un avis
+    </a>
+@endif
+
+<!-- Add this CSS for the review button -->
+<style>
+    .review-button44 {
+        background-color: #f39c12;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 10px;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .review-button44:hover {
+        background-color: #e67e22;
+        transform: translateY(-2px);
+    }
+
+    .review-button44 i {
+        margin-right: 8px;
+    }
+</style>
                 <div class="product-price4"> {{ $ad->prix }}DH</div>
                 <div class="product-location4">
                     <i class="fas fa-map-marker-alt"></i>

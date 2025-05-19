@@ -64,4 +64,13 @@ class Utilisateur extends Model
     {
         return $this->hasMany(Favorite::class, 'id_utilisateur');
     }
+    // Add this to your existing Utilisateur model
+
+/**
+ * Get the reviews written by the user.
+ */
+public function reviews()
+{
+    return $this->hasMany(Review::class, 'id_utilisateur');
+}
 }

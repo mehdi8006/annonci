@@ -95,4 +95,29 @@ public function reports()
 {
     return $this->hasMany(Report::class, 'id_annonce');
 }
+// Add this to your existing Annonce model
+
+/**
+ * Get the reviews for the annonce.
+ */
+public function reviews()
+{
+    return $this->hasMany(Review::class, 'id_annonce');
+}
+
+/**
+ * Get the average rating for the annonce.
+ */
+public function getAverageRatingAttribute()
+{
+    return $this->reviews()->where('statut', 'approuve')->avg('rating') ?: 0;
+}
+
+/**
+ * Get the total number of reviews for the annonce.
+ */
+public function getReviewsCountAttribute()
+{
+    return $this->reviews()->where('statut', 'approuve')->count();
+}
 }
