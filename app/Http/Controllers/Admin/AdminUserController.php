@@ -2,26 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Utilisateur;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
-class AdminUserController extends AdminController
+class AdminUserController extends Controller
 {
     /**
      * Display a listing of the users
      */
     public function index(Request $request)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $query = Utilisateur::query();
         
         // Apply search filter
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
@@ -32,12 +27,12 @@ class AdminUserController extends AdminController
         }
         
         // Apply status filter
-        if ($request->has('statut') && $request->statut != '') {
+        if ($request->filled('statut')) {
             $query->where('statut', $request->statut);
         }
         
         // Apply type filter
-        if ($request->has('type') && $request->type != '') {
+        if ($request->filled('type')) {
             $query->where('type_utilisateur', $request->type);
         }
         
@@ -56,10 +51,6 @@ class AdminUserController extends AdminController
      */
     public function show($id)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $user = Utilisateur::findOrFail($id);
         
         return view('admin.users.show', compact('user'));
@@ -70,23 +61,13 @@ class AdminUserController extends AdminController
      */
     public function updateStatusAndType(Request $request, $id)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $user = Utilisateur::findOrFail($id);
         
         // Validate request
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'statut' => 'required|in:valide,en_attente,supprime',
             'type_utilisateur' => 'required|in:admin,normal',
         ]);
-        
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
         
         // Update user
         $user->statut = $request->statut;
@@ -101,10 +82,6 @@ class AdminUserController extends AdminController
      */
     public function approve($id)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $user = Utilisateur::findOrFail($id);
         $user->statut = 'valide';
         $user->save();
@@ -117,13 +94,9 @@ class AdminUserController extends AdminController
      */
     public function destroy($id)
     {
-        if ($redirect = $this->checkAdmin()) {
-            return $redirect;
-        }
-        
         $user = Utilisateur::findOrFail($id);
         
-        // Instead of deleting, we mark the user as 'supprime'
+        // Instead of deleting, mark the user as 'supprime'
         $user->statut = 'supprime';
         $user->save();
         
