@@ -97,7 +97,31 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/annonces/{id}/status', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'updateStatus'])->name('annonces.updateStatus');
     Route::delete('/annonces/{id}', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'destroy'])->name('annonces.destroy');
     Route::post('/annonces/{id}/approve', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'approve'])->name('annonces.approve');
-    
+    // Catalogue management
+Route::get('/catalogues', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'index'])->name('catalogues.index');
+
+// Categories routes
+Route::get('/categories/create', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'createCategory'])->name('categories.create');
+Route::post('/categories', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'storeCategory'])->name('categories.store');
+Route::get('/categories/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'showCategory'])->name('categories.show');
+Route::get('/categories/{id}/edit', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'editCategory'])->name('categories.edit');
+Route::put('/categories/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'updateCategory'])->name('categories.update');
+Route::delete('/categories/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'destroyCategory'])->name('categories.destroy');
+
+// Subcategories routes
+Route::get('/categories/{id}/subcategories/create', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'createSubcategory'])->name('subcategories.create');
+Route::post('/categories/{id}/subcategories', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'storeSubcategory'])->name('subcategories.store');
+Route::get('/subcategories/{id}/edit', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'editSubcategory'])->name('subcategories.edit');
+Route::put('/subcategories/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'updateSubcategory'])->name('subcategories.update');
+Route::delete('/subcategories/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'destroySubcategory'])->name('subcategories.destroy');
+
+// Cities routes
+Route::get('/cities/create', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'createCity'])->name('cities.create');
+Route::post('/cities', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'storeCity'])->name('cities.store');
+Route::get('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'showCity'])->name('cities.show');
+Route::get('/cities/{id}/edit', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'editCity'])->name('cities.edit');
+Route::put('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'updateCity'])->name('cities.update');
+Route::delete('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'destroyCity'])->name('cities.destroy');
     
    
     // Reports
