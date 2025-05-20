@@ -98,21 +98,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/annonces/{id}', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'destroy'])->name('annonces.destroy');
     Route::post('/annonces/{id}/approve', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'approve'])->name('annonces.approve');
     
-    // Categories
-    Route::get('/categories', [App\Http\Controllers\Admin\AdminCategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [App\Http\Controllers\Admin\AdminCategoryController::class, 'createCategory'])->name('categories.create');
-    Route::post('/categories', [App\Http\Controllers\Admin\AdminCategoryController::class, 'storeCategory'])->name('categories.store');
-    Route::get('/categories/{id}/edit', [App\Http\Controllers\Admin\AdminCategoryController::class, 'editCategory'])->name('categories.edit');
-    Route::put('/categories/{id}', [App\Http\Controllers\Admin\AdminCategoryController::class, 'updateCategory'])->name('categories.update');
-    Route::delete('/categories/{id}', [App\Http\Controllers\Admin\AdminCategoryController::class, 'destroyCategory'])->name('categories.destroy');
     
-    // Subcategories
-    Route::get('/subcategories/create', [App\Http\Controllers\Admin\AdminCategoryController::class, 'createSubcategory'])->name('subcategories.create');
-    Route::post('/subcategories', [App\Http\Controllers\Admin\AdminCategoryController::class, 'storeSubcategory'])->name('subcategories.store');
-    Route::get('/subcategories/{id}/edit', [App\Http\Controllers\Admin\AdminCategoryController::class, 'editSubcategory'])->name('subcategories.edit');
-    Route::put('/subcategories/{id}', [App\Http\Controllers\Admin\AdminCategoryController::class, 'updateSubcategory'])->name('subcategories.update');
-    Route::delete('/subcategories/{id}', [App\Http\Controllers\Admin\AdminCategoryController::class, 'destroySubcategory'])->name('subcategories.destroy');
-    
+   
     // Reports
     Route::get('/reports', [App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/{id}', [App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('reports.show');

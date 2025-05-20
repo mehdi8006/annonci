@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             AnnonceSeeder::class,
             ImageSeeder::class, // Only if there are announcements without images
             FavoriteSeeder::class,
+            ReviewSeeder::class,
+            ReportSeeder::class,
         ]);
 
         // Display summary
@@ -39,5 +41,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Annonces: ' . \App\Models\Annonce::count());
         $this->command->info('Images: ' . \App\Models\Image::count());
         $this->command->info('Favoris: ' . \App\Models\Favorite::count());
-    }
+        $this->command->info('Avis: ' . \App\Models\Review::count());
+        $this->command->info('Signalements: ' . \App\Models\Report::count());
+   }
 }

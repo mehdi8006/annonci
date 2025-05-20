@@ -408,9 +408,10 @@
             <i class="fas fa-list"></i> Annonces
         </a>
         
-        <a href="{{ route('admin.categories.index') }}" class="admin-nav-item {{ request()->routeIs('admin.categories.*') || request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
-            <i class="fas fa-tags"></i> Catégories
-        </a>
+        <!-- Replace the categories nav item with this one -->
+<a href="{{ route('admin.catalogues.index') }}" class="admin-nav-item {{ request()->routeIs('admin.catalogues.*') || request()->routeIs('admin.categories.*') || request()->routeIs('admin.subcategories.*') || request()->routeIs('admin.cities.*') ? 'active' : '' }}">
+    <i class="fas fa-database"></i> Catalogues
+</a>
         
         <div class="admin-nav-section">Modération</div>
         
