@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Providers;
+namespace App\Providers;
+
+use App\Services\OpenRouterService;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\Categorie;
@@ -15,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+           // Register OpenRouter Service as singleton
+        $this->app->singleton(OpenRouterService::class, function ($app) {
+            return new OpenRouterService();
+        });
     }
 
     /**

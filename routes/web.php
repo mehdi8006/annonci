@@ -129,9 +129,16 @@ Route::delete('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueControll
     Route::get('/reports/{id}', [App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('reports.show');
     Route::post('/reports/{id}/handle', [App\Http\Controllers\Admin\AdminReportController::class, 'markAsHandled'])->name('reports.handle');
     
-    // Reviews
+// Reviews - Enhanced routes
     Route::get('/reviews', [App\Http\Controllers\Admin\AdminReviewController::class, 'index'])->name('reviews.index');
     Route::get('/reviews/{id}', [App\Http\Controllers\Admin\AdminReviewController::class, 'show'])->name('reviews.show');
     Route::post('/reviews/{id}/approve', [App\Http\Controllers\Admin\AdminReviewController::class, 'approve'])->name('reviews.approve');
     Route::post('/reviews/{id}/reject', [App\Http\Controllers\Admin\AdminReviewController::class, 'reject'])->name('reviews.reject');
+    // Add this route in the admin group, near the existing reviews routes
+Route::post('/reviews/auto-review', [App\Http\Controllers\Admin\AdminReviewController::class, 'autoReview'])->name('reviews.autoReview');
+    // AI Review Processing
+    Route::post('/reviews/ai-check', [App\Http\Controllers\Admin\AdminReviewController::class, 'aiCheckReviews'])->name('reviews.aiCheck');
+    
+    // Review Statistics API
+    Route::get('/reviews/stats', [App\Http\Controllers\Admin\AdminReviewController::class, 'getStats'])->name('reviews.stats');
 });
