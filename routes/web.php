@@ -138,7 +138,8 @@ Route::delete('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueControll
 Route::post('/reviews/auto-review', [App\Http\Controllers\Admin\AdminReviewController::class, 'autoReview'])->name('reviews.autoReview');
     // AI Review Processing
     Route::post('/reviews/ai-check', [App\Http\Controllers\Admin\AdminReviewController::class, 'aiCheckReviews'])->name('reviews.aiCheck');
-    
+    // Dans le groupe admin, avec les autres routes reviews
+Route::delete('/reviews/delete-rejected', [App\Http\Controllers\Admin\AdminReviewController::class, 'deleteAllRejected'])->name('reviews.deleteAllRejected');
     // Review Statistics API
     Route::get('/reviews/stats', [App\Http\Controllers\Admin\AdminReviewController::class, 'getStats'])->name('reviews.stats');
 });

@@ -16,6 +16,14 @@
                     <i class="fas fa-robot me-1"></i> Modération automatique
                 </button>
             </form>
+            <form action="{{ route('admin.reviews.deleteAllRejected') }}" method="POST" class="d-inline" 
+      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer tous les avis rejetés ? Cette action est irréversible.')">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger shadow-sm">
+        <i class="fas fa-trash me-1"></i> Supprimer tous les rejetés
+    </button>
+</form>
         </div>
     </div>
 
