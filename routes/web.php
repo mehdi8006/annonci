@@ -91,7 +91,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/users/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('users.destroy');
     Route::post('/users/{id}/approve', [App\Http\Controllers\Admin\AdminUserController::class, 'approve'])->name('users.approve');
     
-  // Annonces
+ // Annonces - Enhanced routes
     Route::get('/annonces', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'index'])->name('annonces.index');
     Route::get('/annonces/{id}', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'show'])->name('annonces.show');
     Route::get('/annonces/{id}/edit', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'edit'])->name('annonces.edit');
@@ -99,7 +99,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/annonces/{id}/status', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'updateStatus'])->name('annonces.updateStatus');
     Route::delete('/annonces/{id}', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'destroy'])->name('annonces.destroy');
     Route::post('/annonces/{id}/approve', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'approve'])->name('annonces.approve');
-    // Catalogue management
+    
+    // New bulk and processing routes
+    Route::post('/annonces/activate-all-pending', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'activateAllPending'])->name('annonces.activateAllPending');
+    Route::post('/annonces/{id}/process-and-keep', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'processAndKeep'])->name('annonces.processAndKeep');
+    Route::post('/annonces/{id}/process-and-delete', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'processAndDelete'])->name('annonces.processAndDelete');
+        // Catalogue management
 Route::get('/catalogues', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'index'])->name('catalogues.index');
 
 // Categories routes

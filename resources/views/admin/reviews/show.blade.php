@@ -151,7 +151,7 @@
                 
                 <div class="position-relative">
                     @if($review->annonce->images->where('principale', true)->first())
-                        <img src="{{ asset($review->annonce->images->where('principale', true)->first()->url) }}" 
+                        <img src="{{ asset('storage/' .$review->annonce->images->where('principale', true)->first()->url) }}" 
                             class="w-100" alt="{{ $review->annonce->titre }}" style="height: 150px; object-fit: cover;">
                     @else
                         <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">

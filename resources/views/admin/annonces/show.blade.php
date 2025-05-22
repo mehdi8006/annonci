@@ -38,7 +38,7 @@
                 <!-- Annonce Image -->
                 <div class="position-relative">
                     @if($annonce->images->where('principale', true)->first())
-                        <img src="{{ asset($annonce->images->where('principale', true)->first()->url) }}" 
+                        <img src="{{ asset('storage/' .$annonce->images->where('principale', true)->first()->url) }}" 
                             class="w-100" alt="{{ $annonce->titre }}" style="height: 200px; object-fit: cover;">
                     @else
                         <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
@@ -180,6 +180,29 @@
                     <p class="mb-0">{{ $annonce->description }}</p>
                 </div>
             </div>
+
+            <!-- Actions de traitement (if there are reports) -->
+            @if($annonce->reports->count() > 0)
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 text-info">
+                        <i class="fas fa-cogs me-2"></i>Actions de traitement
+                    </h5>
+                </div>
+                
+                <div class="card-body">
+                    <p class="text-muted mb-3">Cette annonce a {{ $annonce->reports->count() }} signalement(s). Choisissez une action :</p>
+                    <div class="d-flex gap-3">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#processKeepModal">
+                            <i class="fas fa-check-circle me-1"></i> Traiter et conserver
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#processDeleteModal">
+                            <i class="fas fa-trash-alt me-1"></i> Traiter et supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @endif
             
             <!-- Reports -->
             <div class="card border-0 shadow-sm mb-4">
@@ -333,7 +356,69 @@
                     @endif
                 </div>
             </div>
-            <!-------------------------------------->
+        </div>
+    </div>
+
+    <!-- Process and Keep Modal -->
+    <div class="modal fade" id="processKeepModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Traiter et conserver</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Cette action va :</p>
+                    <ul>
+                        <li>Marquer tous les signalements comme traités</li>
+                        <li>Conserver l'annonce et la marquer comme validée</li>
+                    </ul>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ $annonce->reports->count() }} signalement(s) seront marqués comme traités.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form action="{{ route('admin.annonces.processAndKeep', $annonce->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-1"></i> Confirmer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process and Delete Modal -->
+    <div class="modal fade" id="processDeleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Traiter et supprimer</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Cette action va :</p>
+                    <ul>
+                        <li>Marquer tous les signalements comme traités</li>
+                        <li>Supprimer l'annonce définitivement</li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Attention :</strong> Cette action est irréversible.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form action="{{ route('admin.annonces.processAndDelete', $annonce->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i> Confirmer la suppression
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

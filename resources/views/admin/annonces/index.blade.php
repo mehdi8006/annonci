@@ -7,9 +7,107 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Liste des annonces</h1>
         <div class="d-flex gap-2">
+            <button type="button" class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#activateAllModal">
+                <i class="fas fa-check-double me-1"></i> Activer tout en attente
+            </button>
             <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#filterModal">
                 <i class="fas fa-filter me-1"></i> Filtrer
             </button>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-primary text-white me-3">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Total Annonces</div>
+                            <div class="h4 mb-0">{{ number_format($stats['total']) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-warning text-white me-3">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">En Attente</div>
+                            <div class="h4 mb-0">{{ number_format($stats['en_attente']) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-success text-white me-3">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Validées</div>
+                            <div class="h4 mb-0">{{ number_format($stats['validee']) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-danger text-white me-3">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Supprimées</div>
+                            <div class="h4 mb-0">{{ number_format($stats['supprimee']) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activate All Modal -->
+    <div class="modal fade" id="activateAllModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Confirmer l'activation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir activer toutes les annonces en attente ?</p>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>{{ $stats['en_attente'] }}</strong> annonce(s) seront activées.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form action="{{ route('admin.annonces.activateAllPending') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-1"></i> Confirmer
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -54,6 +152,25 @@
                             </div>
                         </div>
                         
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="sort" class="form-label">Trier par</label>
+                                <select id="sort" name="sort" class="form-select">
+                                    <option value="created_at" {{ request('sort') === 'created_at' ? 'selected' : '' }}>Date de création</option>
+                                    <option value="reports_count" {{ request('sort') === 'reports_count' ? 'selected' : '' }}>Nombre de signalements</option>
+                                    <option value="titre" {{ request('sort') === 'titre' ? 'selected' : '' }}>Titre</option>
+                                    <option value="prix" {{ request('sort') === 'prix' ? 'selected' : '' }}>Prix</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="direction" class="form-label">Ordre</label>
+                                <select id="direction" name="direction" class="form-select">
+                                    <option value="asc" {{ request('direction') === 'asc' ? 'selected' : '' }}>Croissant</option>
+                                    <option value="desc" {{ request('direction') === 'desc' ? 'selected' : '' }}>Décroissant</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                         <div class="text-end">
                             <a href="{{ route('admin.annonces.index') }}" class="btn btn-outline-secondary me-2">Réinitialiser</a>
                             <button type="submit" class="btn btn-primary">Appliquer</button>
@@ -65,7 +182,7 @@
     </div>
 
     <!-- Active Filters -->
-    @if(request('search') || request('statut') || request('categorie'))
+    @if(request('search') || request('statut') || request('categorie') || request('sort') !== 'created_at' || request('direction') !== 'asc')
         <div class="alert alert-light border d-flex justify-content-between align-items-center mb-4">
             <div>
                 <i class="fas fa-filter me-2 text-primary"></i> 
@@ -77,6 +194,17 @@
                         $categorieNom = App\Models\Categorie::find(request('categorie'))->nom ?? '';
                     @endphp
                     <span class="badge bg-primary me-2">Catégorie: {{ $categorieNom }}</span>
+                @endif
+                @if(request('sort') !== 'created_at')
+                    <span class="badge bg-primary me-2">Tri: 
+                        @if(request('sort') === 'reports_count') Signalements
+                        @elseif(request('sort') === 'titre') Titre
+                        @elseif(request('sort') === 'prix') Prix
+                        @endif
+                    </span>
+                @endif
+                @if(request('direction') !== 'asc')
+                    <span class="badge bg-primary me-2">Ordre: {{ request('direction') === 'desc' ? 'Décroissant' : 'Croissant' }}</span>
                 @endif
             </div>
             <a href="{{ route('admin.annonces.index') }}" class="btn btn-sm btn-outline-secondary">
@@ -106,10 +234,8 @@
                                 <td class="ps-3 fw-medium">{{ $annonce->id }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                       
                                         <div>
                                             <h6 class="mb-0">{{ Str::limit($annonce->titre, 40) }}</h6>
-                                          
                                         </div>
                                     </div>
                                 </td>
@@ -163,9 +289,13 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge bg-danger">
-                                        {{ $annonce->reports->count() }}
-                                    </span>
+                                    @if($annonce->reports->count() > 0)
+                                        <span class="badge bg-danger">
+                                            {{ $annonce->reports->count() }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted">0</span>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center">
@@ -245,6 +375,18 @@
         border: none;
     }
     
+    /* Icon Circle */
+    .icon-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    
     /* Dropdown Styling */
     .dropdown-menu {
         padding: 0.5rem 0;
@@ -276,6 +418,11 @@
     .rating-stars {
         font-size: 0.8rem;
         white-space: nowrap;
+    }
+    
+    /* Card Styling */
+    .card {
+        border-radius: 0.75rem;
     }
 </style>
 @endsection
