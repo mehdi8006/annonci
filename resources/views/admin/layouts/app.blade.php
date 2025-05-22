@@ -415,9 +415,7 @@
         
         <div class="admin-nav-section">Modération</div>
         
-        <a href="{{ route('admin.reports.index') }}" class="admin-nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
-            <i class="fas fa-flag"></i> Signalements
-        </a>
+        
         
         <a href="{{ route('admin.reviews.index') }}" class="admin-nav-item {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
             <i class="fas fa-star"></i> Avis

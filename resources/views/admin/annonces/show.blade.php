@@ -35,22 +35,105 @@
                     </div>
                 </div>
                 
-                <!-- Annonce Image -->
+                <!-- FIXED IMAGE GALLERY SECTION -->
                 <div class="position-relative">
-                    @if($annonce->images->where('principale', true)->first())
-                        <img src="{{ asset('storage/' .$annonce->images->where('principale', true)->first()->url) }}" 
-                            class="w-100" alt="{{ $annonce->titre }}" style="height: 200px; object-fit: cover;">
+                    @if($annonce->images->count() > 0)
+                        @php 
+                            $images = $annonce->images->take(4);
+                            $imageCount = $images->count();
+                        @endphp
+                        
+                        <div style="height: 250px;" class="image-gallery">
+                            @if($imageCount == 1)
+                                <!-- Single Image - Full Width -->
+                                <div class="h-100">
+                                    <img src="{{ asset('storage/' . $images->first()->url) }}" 
+                                         class="w-100 h-100 image-clickable" 
+                                         alt="{{ $annonce->titre }}" 
+                                         style="object-fit: cover; cursor: pointer; border-radius: 0;"
+                                         onclick="openImageModal('{{ asset('storage/' . $images->first()->url) }}', 0)">
+                                </div>
+                            @elseif($imageCount == 2)
+                                <!-- Two Images - Side by Side -->
+                                <div class="row g-1 h-100">
+                                    @foreach($images as $index => $image)
+                                        <div class="col-6 h-100">
+                                            <img src="{{ asset('storage/' . $image->url) }}" 
+                                                 class="w-100 h-100 image-clickable" 
+                                                 alt="{{ $annonce->titre }}" 
+                                                 style="object-fit: cover; cursor: pointer;"
+                                                 onclick="openImageModal('{{ asset('storage/' . $image->url) }}', {{ $index }})">
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @elseif($imageCount == 3)
+                                <!-- Three Images - One Large, Two Small -->
+                                <div class="row g-1 h-100">
+                                    <div class="col-8 h-100">
+                                        <img src="{{ asset('storage/' . $images->first()->url) }}" 
+                                             class="w-100 h-100 image-clickable" 
+                                             alt="{{ $annonce->titre }}" 
+                                             style="object-fit: cover; cursor: pointer;"
+                                             onclick="openImageModal('{{ asset('storage/' . $images->first()->url) }}', 0)">
+                                    </div>
+                                    <div class="col-4 h-100">
+                                        <div class="row g-1 h-100">
+                                            @foreach($images->skip(1) as $index => $image)
+                                                <div class="col-12" style="height: calc(50% - 2px);">
+                                                    <img src="{{ asset('storage/' . $image->url) }}" 
+                                                         class="w-100 h-100 image-clickable" 
+                                                         alt="{{ $annonce->titre }}" 
+                                                         style="object-fit: cover; cursor: pointer;"
+                                                         onclick="openImageModal('{{ asset('storage/' . $image->url) }}', {{ $index + 1 }})">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Four or More Images - 2x2 Grid -->
+                                <div class="row g-1 h-100">
+                                    @foreach($images->take(4) as $index => $image)
+                                        <div class="col-6" style="height: calc(50% - 2px);">
+                                            <div class="position-relative h-100">
+                                                <img src="{{ asset('storage/' . $image->url) }}" 
+                                                     class="w-100 h-100 image-clickable" 
+                                                     alt="{{ $annonce->titre }}" 
+                                                     style="object-fit: cover; cursor: pointer;"
+                                                     onclick="openImageModal('{{ asset('storage/' . $image->url) }}', {{ $index }})">
+                                                
+                                                @if($index == 3 && $annonce->images->count() > 4)
+                                                    <!-- Overlay for additional images -->
+                                                    <div class="image-overlay d-flex align-items-center justify-content-center">
+                                                        <span class="text-white fw-bold fs-4">
+                                                            +{{ $annonce->images->count() - 4 }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                     @else
-                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                            <i class="fas fa-image fa-3x text-secondary"></i>
+                        <!-- No Images Placeholder -->
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <div class="text-center">
+                                <i class="fas fa-image fa-3x text-secondary mb-2"></i>
+                                <p class="text-muted mb-0">Aucune image disponible</p>
+                            </div>
                         </div>
                     @endif
                     
-                    <div class="position-absolute top-0 end-0 p-3">
-                        <span class="badge bg-dark px-3 py-2">
-                            <i class="fas fa-camera me-1"></i> {{ $annonce->images->count() }} images
-                        </span>
-                    </div>
+                    <!-- Image Counter Badge -->
+                    @if($annonce->images->count() > 0)
+                        <div class="position-absolute top-0 end-0 p-3">
+                            <span class="badge bg-dark px-3 py-2">
+                                <i class="fas fa-camera me-1"></i> {{ $annonce->images->count() }} image{{ $annonce->images->count() > 1 ? 's' : '' }}
+                            </span>
+                        </div>
+                    @endif
                 </div>
                 
                 <!-- Annonce Details -->
@@ -359,6 +442,43 @@
         </div>
     </div>
 
+    <!-- IMAGE MODAL -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-0 position-relative">
+                    <!-- Close Button -->
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" 
+                            data-bs-dismiss="modal" aria-label="Close" style="z-index: 1060;"></button>
+                    
+                    <!-- Image Display -->
+                    <div class="text-center">
+                        <img id="modalImage" src="" class="img-fluid rounded" alt="Image en grand" style="max-height: 85vh; object-fit: contain;">
+                    </div>
+                    
+                    <!-- Navigation Arrows (if multiple images) -->
+                    @if($annonce->images->count() > 1)
+                        <button type="button" class="btn btn-outline-light btn-lg position-absolute top-50 start-0 translate-middle-y ms-3" 
+                                id="prevImage" onclick="navigateImage(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-light btn-lg position-absolute top-50 end-0 translate-middle-y me-3" 
+                                id="nextImage" onclick="navigateImage(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        
+                        <!-- Image Counter -->
+                        <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
+                            <span class="badge bg-dark bg-opacity-75 px-3 py-2" id="imageCounter">
+                                1 / {{ $annonce->images->count() }}
+                            </span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Process and Keep Modal -->
     <div class="modal fade" id="processKeepModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -513,38 +633,197 @@
         background-color: #0d6efd !important;
     }
     
-    /* Image Gallery */
-    .gallery-item {
-        position: relative;
-        height: 150px;
-        border-radius: 0.5rem;
+    /* IMAGE GALLERY STYLES */
+    .image-gallery {
         overflow: hidden;
     }
     
-    .gallery-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    .image-clickable {
+        transition: all 0.3s ease;
+        border-radius: 4px;
     }
     
-    .gallery-item-overlay {
+    .image-clickable:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .image-overlay {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-        opacity: 0;
-        transition: opacity 0.3s;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 4px;
+        z-index: 10;
     }
     
-    .gallery-item:hover .gallery-item-overlay {
+    /* Modal Styles */
+    #imageModal .modal-content {
+        background: rgba(0, 0, 0, 0.9) !important;
+    }
+    
+    #imageModal .btn-outline-light {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    #imageModal .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Navigation arrows hidden by default */
+    #prevImage, #nextImage {
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+    }
+    
+    #prevImage:hover, #nextImage:hover {
         opacity: 1;
     }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .image-gallery {
+            height: 200px !important;
+        }
+        
+        #imageModal .btn-lg {
+            display: none;
+        }
+        
+        #imageModal #imageCounter {
+            font-size: 0.8rem;
+        }
+    }
 </style>
+@endsection
+
+@section('js')
+<script>
+    // Image gallery functionality
+    let currentImageIndex = 0;
+    let allImages = [];
+    
+    // Initialize images array when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        @if($annonce->images->count() > 0)
+            allImages = [
+                @foreach($annonce->images as $image)
+                    '{{ asset('storage/' . $image->url) }}'{{ !$loop->last ? ',' : '' }}
+                @endforeach
+            ];
+        @endif
+    });
+    
+    // Function to open image modal
+    function openImageModal(imageUrl, index) {
+        currentImageIndex = index;
+        document.getElementById('modalImage').src = imageUrl;
+        
+        @if($annonce->images->count() > 1)
+            updateImageCounter();
+            updateNavigationButtons();
+        @endif
+        
+        // Show modal
+        new bootstrap.Modal(document.getElementById('imageModal')).show();
+    }
+    
+    @if($annonce->images->count() > 1)
+    // Function to navigate between images
+    function navigateImage(direction) {
+        currentImageIndex += direction;
+        
+        // Handle wrap around
+        if (currentImageIndex >= allImages.length) {
+            currentImageIndex = 0;
+        } else if (currentImageIndex < 0) {
+            currentImageIndex = allImages.length - 1;
+        }
+        
+        // Update image
+        document.getElementById('modalImage').src = allImages[currentImageIndex];
+        updateImageCounter();
+        updateNavigationButtons();
+    }
+    
+    // Update image counter
+    function updateImageCounter() {
+        document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${allImages.length}`;
+    }
+    
+    // Update navigation button visibility
+    function updateNavigationButtons() {
+        const prevBtn = document.getElementById('prevImage');
+        const nextBtn = document.getElementById('nextImage');
+        
+        // Always show both buttons for circular navigation
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('imageModal'));
+        
+        if (modal && modal._isShown) {
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                navigateImage(-1);
+            } else if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                navigateImage(1);
+            } else if (event.key === 'Escape') {
+                modal.hide();
+            }
+        }
+    });
+    @endif
+    
+    // Touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.getElementById('imageModal').addEventListener('touchstart', function(event) {
+        touchStartX = event.changedTouches[0].screenX;
+    });
+    
+    document.getElementById('imageModal').addEventListener('touchend', function(event) {
+        touchEndX = event.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        @if($annonce->images->count() > 1)
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe left - next image
+                navigateImage(1);
+            } else {
+                // Swipe right - previous image
+                navigateImage(-1);
+            }
+        }
+        @endif
+    }
+    
+    // Prevent modal close when clicking on image
+    document.getElementById('modalImage').addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+    
+    // Close modal when clicking on background
+    document.getElementById('imageModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            bootstrap.Modal.getInstance(this).hide();
+        }
+    });
+</script>
 @endsection
