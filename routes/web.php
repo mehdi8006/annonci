@@ -125,7 +125,10 @@ Route::delete('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueControll
     
    
     // Reports
-   
+   // Reports - Add these routes in the admin group
+Route::get('/reports', [App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('reports.index');
+Route::get('/reports/{annonceId}', [App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('reports.show');
+Route::post('/reports/{annonceId}/process-all', [App\Http\Controllers\Admin\AdminReportController::class, 'processAllReports'])->name('reports.processAll');
 // Reviews - Enhanced routes
     Route::get('/reviews', [App\Http\Controllers\Admin\AdminReviewController::class, 'index'])->name('reviews.index');
     Route::get('/reviews/{id}', [App\Http\Controllers\Admin\AdminReviewController::class, 'show'])->name('reviews.show');
