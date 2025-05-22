@@ -7,9 +7,111 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Liste des utilisateurs</h1>
         <div class="d-flex gap-2">
+            @if($stats['pending'] > 0)
+                <button type="button" class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#activateAllModal">
+                    <i class="fas fa-check-circle me-1"></i> Activer tous ({{ $stats['pending'] }})
+                </button>
+            @endif
             <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#filterModal">
                 <i class="fas fa-filter me-1"></i> Filtrer
             </button>
+        </div>
+    </div>
+
+    <!-- User Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="stats-icon stats-primary me-3">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="stats-title">Total Utilisateurs</div>
+                        <div class="stats-value">{{ number_format($stats['total']) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="stats-icon stats-success me-3">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <div class="stats-title">Utilisateurs Actifs</div>
+                        <div class="stats-value">{{ number_format($stats['active']) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="stats-icon stats-warning me-3">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div>
+                        <div class="stats-title">En Attente</div>
+                        <div class="stats-value">{{ number_format($stats['pending']) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="stats-icon stats-danger me-3">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div>
+                        <div class="stats-title">Inactifs</div>
+                        <div class="stats-value">{{ number_format($stats['inactive']) }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activate All Pending Users Modal -->
+    <div class="modal fade" id="activateAllModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>Activer tous les utilisateurs en attente
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center py-3">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-3x text-success mb-3"></i>
+                        </div>
+                        <h5>Confirmer l'activation</h5>
+                        <p class="text-muted">
+                            Êtes-vous sûr de vouloir activer tous les <strong>{{ $stats['pending'] }} utilisateur(s)</strong> en attente ?
+                        </p>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Cette action changera le statut de tous les utilisateurs en attente vers "Actif".
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form action="{{ route('admin.users.activateAllPending') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check-circle me-1"></i> Activer tous
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -230,6 +332,52 @@
         font-size: 16px;
     }
     
+    /* Stats Cards */
+    .stats-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    
+    .stats-primary {
+        background-color: #0d6efd;
+        color: white;
+    }
+    
+    .stats-success {
+        background-color: #198754;
+        color: white;
+    }
+    
+    .stats-warning {
+        background-color: #ffc107;
+        color: white;
+    }
+    
+    .stats-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .stats-title {
+        font-size: 14px;
+        color: #6c757d;
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+    
+    .stats-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #212529;
+        line-height: 1;
+    }
+    
     /* Light Button Variants */
     .btn-light-primary {
         background-color: rgba(13, 110, 253, 0.1);
@@ -303,6 +451,15 @@
     .page-item.active .page-link {
         background-color: #0d6efd;
         border-color: #0d6efd;
+    }
+    
+    /* Card hover effects for stats */
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
     }
 </style>
 @endsection

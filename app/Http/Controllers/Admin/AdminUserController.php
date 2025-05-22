@@ -36,14 +36,22 @@ class AdminUserController extends Controller
             $query->where('type_utilisateur', $request->type);
         }
         
-        // Apply sorting
+        // Apply sorting - Default to recent first (newest to oldest)
         $sortField = $request->get('sort', 'created_at');
         $sortDirection = $request->get('direction', 'desc');
         $query->orderBy($sortField, $sortDirection);
         
         $users = $query->paginate(15);
         
-        return view('admin.users.index', compact('users'));
+        // Calculate user statistics
+        $stats = [
+            'total' => Utilisateur::count(),
+            'active' => Utilisateur::where('statut', 'valide')->count(),
+            'pending' => Utilisateur::where('statut', 'en_attente')->count(),
+            'inactive' => Utilisateur::where('statut', 'supprime')->count(),
+        ];
+        
+        return view('admin.users.index', compact('users', 'stats'));
     }
     
     /**
@@ -87,6 +95,21 @@ class AdminUserController extends Controller
         $user->save();
         
         return redirect()->back()->with('success', 'Utilisateur approuvé avec succès.');
+    }
+    
+    /**
+     * Activate all pending users
+     */
+    public function activateAllPending()
+    {
+        $pendingCount = Utilisateur::where('statut', 'en_attente')->count();
+        
+        if ($pendingCount > 0) {
+            Utilisateur::where('statut', 'en_attente')->update(['statut' => 'valide']);
+            return redirect()->back()->with('success', "$pendingCount utilisateur(s) en attente ont été activés avec succès.");
+        }
+        
+        return redirect()->back()->with('info', 'Aucun utilisateur en attente trouvé.');
     }
     
     /**
