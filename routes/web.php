@@ -78,8 +78,15 @@ Route::post('/annonces/{id}/reviews', [ReviewController::class, 'store'])->name(
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     // Dashboard
+  // Dashboard routes
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/data', [App\Http\Controllers\Admin\AdminDashboardController::class, 'getDashboardData'])->name('dashboard.data');
     
+    // Quick Actions routes
+    Route::post('/dashboard/approve-users', [App\Http\Controllers\Admin\AdminDashboardController::class, 'approveAllPendingUsers'])->name('dashboard.approveUsers');
+    Route::post('/dashboard/approve-annonces', [App\Http\Controllers\Admin\AdminDashboardController::class, 'approveAllPendingAnnonces'])->name('dashboard.approveAnnonces');
+    Route::post('/dashboard/auto-moderate', [App\Http\Controllers\Admin\AdminDashboardController::class, 'autoModerateReviews'])->name('dashboard.autoModerate');
+        
        // Users
     Route::post('/users/activate-all-pending', [App\Http\Controllers\Admin\AdminUserController::class, 'activateAllPending'])->name('users.activateAllPending');
 
@@ -130,12 +137,6 @@ Route::get('/cities/{id}/edit', [App\Http\Controllers\Admin\AdminCatalogueContro
 Route::put('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'updateCity'])->name('cities.update');
 Route::delete('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueController::class, 'destroyCity'])->name('cities.destroy');
     
-   
-    // Reports
-   // Reports - Add these routes in the admin group
-Route::get('/reports', [App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('reports.index');
-Route::get('/reports/{annonceId}', [App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('reports.show');
-Route::post('/reports/{annonceId}/process-all', [App\Http\Controllers\Admin\AdminReportController::class, 'processAllReports'])->name('reports.processAll');
 // Reviews - Enhanced routes
     Route::get('/reviews', [App\Http\Controllers\Admin\AdminReviewController::class, 'index'])->name('reviews.index');
     Route::get('/reviews/{id}', [App\Http\Controllers\Admin\AdminReviewController::class, 'show'])->name('reviews.show');
