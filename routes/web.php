@@ -125,10 +125,7 @@ Route::delete('/cities/{id}', [App\Http\Controllers\Admin\AdminCatalogueControll
     
    
     // Reports
-    Route::get('/reports', [App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/{id}', [App\Http\Controllers\Admin\AdminReportController::class, 'show'])->name('reports.show');
-    Route::post('/reports/{id}/handle', [App\Http\Controllers\Admin\AdminReportController::class, 'markAsHandled'])->name('reports.handle');
-    
+   
 // Reviews - Enhanced routes
     Route::get('/reviews', [App\Http\Controllers\Admin\AdminReviewController::class, 'index'])->name('reviews.index');
     Route::get('/reviews/{id}', [App\Http\Controllers\Admin\AdminReviewController::class, 'show'])->name('reviews.show');
