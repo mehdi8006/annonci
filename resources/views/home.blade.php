@@ -9,10 +9,10 @@
 @extends('layouts.masterhome')
 @section('main')
 <x-home.a/>
-<x-home.scrollingcarte :ads="$recentAds"  :add="$add" :title="'Plus récent'"/>
+<x-home.scrollingcarte :ads="$recentAds" :cat="$recentAds->categorie"  :add="$add" :title="'Plus récent'"/>
 
 @foreach($categoryAds as $data)
-    <x-home.scrollingcarte :ads="$data['ads']" :add="$add" :title="$data['category']->nom" />
+    <x-home.scrollingcarte :ads="$data['ads']" :add="$add" :cat="$data['category']"  :title="$data['category']->nom" />
 @endforeach
 <x-home.b/>
 @endsection

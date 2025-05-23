@@ -281,7 +281,7 @@
         text-align: center;
     }
 </style>
-@props(['ads','title','add'])
+@props(['ads','title','add','cat'])
 <!-- Titre de la section des offres spéciales -->
 <div class="section-title1">{{$title}}</div>
 
@@ -338,6 +338,9 @@
     @endforeach
     @if ($add!='0')
      <!-- Card for "See more ads" -->
+    <a href="{{ route('search.by.category', $cat->first()->id) }}" class="dropdown-item195">
+                        
+                    
     <div class="product-card1">
         <div class="card123">
             <div class="plus-circle">
@@ -349,7 +352,7 @@
             <div class="text">Voir plus d'annonces</div>
         </div>
     </div>
-        
+      </a>    
     @endif
     <!-- Card for "See more ads" -->
    

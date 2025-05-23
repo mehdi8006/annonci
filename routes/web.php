@@ -42,7 +42,7 @@ Route::get('/search/city/{cityId}', [SearchController::class, 'searchByCity'])->
 // ============================================================================
 // AUTHENTICATED USER ROUTES - Require authentication middleware
 // ============================================================================
-Route::middleware(['auth'])->group(function () {
+Route::middleware([\App\Http\Middleware\AuthMiddleware::class])->group(function () {
     // Protected detail view for authenticated users
     Route::get('member/details/{id}', [HomeController::class, 'detailmember'])->name('detailsm');
     

@@ -1,15 +1,12 @@
 <?php
 
 namespace App\Providers;
-namespace App\Providers;
 
 use App\Services\OpenRouterService;
-
 use Illuminate\Support\ServiceProvider;
 use App\Models\Categorie;
 use App\Models\Ville;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Facades\View; // This import is missing
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-           // Register OpenRouter Service as singleton
+        // Register OpenRouter Service as singleton
         $this->app->singleton(OpenRouterService::class, function ($app) {
             return new OpenRouterService();
         });
@@ -29,8 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-         
-         View::composer('*', function ($view) {
+        View::composer('*', function ($view) {
             $villes = Ville::orderBy('nom')->get();
             $categories = Categorie::with('sousCategories')->orderBy('nom')->get();
             

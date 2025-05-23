@@ -14,7 +14,7 @@ class HomeController extends Controller
         // Annonces récentes
         $recentAds = Annonce::where('statut','validee')
             ->orderBy('date_publication', 'desc')
-            ->with(['images', 'utilisateur', 'ville'])
+            ->with(['images', 'utilisateur', 'ville','categorie'])
             ->take(10)
             ->get();
 

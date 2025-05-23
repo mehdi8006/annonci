@@ -20,7 +20,14 @@
                     <!-- Favorites section removed -->
                 </div>
 
-                <div class="product-image2" style="background-image: url('{{ $annonce->images->where('principale', true)->first()->url ?? '/api/placeholder/380/240' }}')"></div>
+                <div class="product-image2" >
+                     @foreach($annonce->images as $image)
+                @if($image->principale == 1)
+                    <img src="{{ asset('storage/' . $image->url) }}" alt="Image principale">
+                    @break
+                @endif
+            @endforeach
+                </div>
 
                 <div class="product-details2">
                     <div class="location2">

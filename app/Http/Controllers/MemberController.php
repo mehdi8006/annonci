@@ -87,7 +87,7 @@ class MemberController extends Controller
         $validator = Validator::make($request->all(), [
             'titre' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
-            'prix' => 'required|numeric|min:0|max:10',
+            'prix' => 'required|numeric|min:0|max:1000000',
             'id_ville' => 'required|exists:villes,id',
             'id_categorie' => 'required|exists:categories,id',
             'id_sous_categorie' => 'nullable|exists:sous_categories,id',
@@ -165,8 +165,8 @@ class MemberController extends Controller
 
         $validator = Validator::make($request->all(), [
             'titre' => 'required|string|max:255',
-            'description' => 'required|string',
-            'prix' => 'required|numeric|min:0',
+            'description' => 'required|string|max:1000',
+            'prix' => 'required|numeric|min:0|max:1000000',
             'id_ville' => 'required|exists:villes,id',
             'id_categorie' => 'required|exists:categories,id',
             'id_sous_categorie' => 'nullable|exists:sous_categories,id',
