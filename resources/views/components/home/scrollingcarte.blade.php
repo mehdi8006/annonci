@@ -336,9 +336,9 @@
     </div>   
     </a>
     @endforeach
-    @if ($add!='0')
+    @if ($add!='0' && isset($cat))
      <!-- Card for "See more ads" -->
-    <a href="{{ route('search.by.category', $cat->first()->id) }}" class="dropdown-item195">
+    <a href="{{ route('search.by.category', $cat->id) }}" class="dropdown-item195">
                         
                     
     <div class="product-card1">
