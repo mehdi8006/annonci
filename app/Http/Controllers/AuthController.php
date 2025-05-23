@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Password;
 use App\Models\User;
 use App\Models\Utilisateur;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\PasswordResetHelper;
 use App\Helpers\EmailVerificationHelper;
-
 use App\Helpers\EmailHelper;
 
 class AuthController extends Controller
@@ -45,78 +42,80 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function login(Request $request) {
-    // Validate the login form data
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-    
-    if ($validator->fails()) {
+    public function login(Request $request) 
+    {
+        // Validate the login form data
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return redirect()->route('form')
+                ->withErrors($validator)
+                ->withInput($request->except('password'));
+        }
+        
+        // Attempt to log the user in
+        $credentials = $request->only('email', 'password');
+        $remember = $request->has('remember');
+        
+        // Find the user by email in the utilisateurs table
+        $user = Utilisateur::where('email', $credentials['email'])->first();
+        
+        // Check if user exists and password is correct
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            // Check user status
+            if ($user->statut == 'supprime') {
+                return redirect()->route('form')
+                    ->withErrors(['email' => 'Votre compte a été suspendu.'])
+                    ->withInput($request->except('password'));
+            }
+            
+            if ($user->statut == 'en_attente') {
+                return redirect()->route('form')
+                    ->withErrors(['email' => 'Votre compte n\'est pas encore activé.'])
+                    ->withInput($request->except('password'));
+            }
+            
+            // Store user information in the session
+            $request->session()->put([
+                'user_id' => $user->id,
+                'user_name' => $user->nom,
+                'user_email' => $user->email,
+                'user_type' => $user->type_utilisateur,
+                'user_status' => $user->statut,
+                'utilisateur' => $user
+            ]);
+            
+            // Regenerate the session for security
+            $request->session()->regenerate();
+            
+            // If remember me is checked, set a cookie
+            if ($remember) {
+                // Create a remember token and store it in the cookie
+                $rememberToken = Hash::make(time() . $user->email);
+                // Update the remember token in the database
+                $user->remember_token = $rememberToken;
+                $user->save();
+                
+                // Set the cookie for 30 days
+                cookie('remember_token', $rememberToken, 43200); // 30 days in minutes
+            }
+            
+            // Redirect based on user type
+            if ($user->type_utilisateur === 'admin') {
+                return redirect()->route('admin.dashboard')->with('success', 'Connexion réussie!');
+            } else {
+                return redirect('/home')->with('success', 'Connexion réussie!');
+            }
+        }
+        
+        // Authentication failed
         return redirect()->route('form')
-            ->withErrors($validator)
+            ->withErrors(['email' => 'Ces identifiants ne correspondent pas à nos enregistrements.'])
             ->withInput($request->except('password'));
     }
-    
-    // Attempt to log the user in
-    $credentials = $request->only('email', 'password');
-    $remember = $request->has('remember');
-    
-    // Find the user by email in the utilisateurs table
-    $user = Utilisateur::where('email', $credentials['email'])->first();
-    
-    // Check if user exists and password is correct
-    if ($user && Hash::check($credentials['password'], $user->password)) {
-        // Check user status
-        if ($user->statut == 'suprime') {
-            return redirect()->route('form')
-                ->withErrors(['email' => 'Votre compte a été suspendu.'])
-                ->withInput($request->except('password'));
-        }
-        
-        if ($user->statut == 'en_attente') {
-            return redirect()->route('form')
-                ->withErrors(['email' => 'Votre compte n\'est pas encore activé.'])
-                ->withInput($request->except('password'));
-        }
-        
-        // Store user information in the session
-        $request->session()->put('user_id', $user->id);
-        $request->session()->put('user_name', $user->nom);
-        $request->session()->put('user_email', $user->email);
-        $request->session()->put('user_type', $user->type_utilisateur);
-        
-        // Also store the complete user object in the session for admin access
-        $request->session()->put('utilisateur', $user);
-        
-        // Regenerate the session for security
-        $request->session()->regenerate();
-        
-        // If remember me is checked, set a cookie
-        if ($remember) {
-            // Create a remember token and store it in the cookie
-            $rememberToken = Hash::make(time() . $user->email);
-            // Update the remember token in the database
-            $user->remember_token = $rememberToken;
-            $user->save();
-            
-            // Set the cookie for 30 days
-            cookie('remember_token', $rememberToken, 43200); // 30 days in minutes
-        }
-        
-        // Redirect based on user type
-        if ($user->type_utilisateur === 'admin') {
-            return redirect()->route('admin.dashboard')->with('success', 'Connexion réussie!');
-        } else {
-            return redirect('/home')->with('success', 'Connexion réussie!');
-        }
-    }
-    
-    // Authentication failed
-    return redirect()->route('form')
-        ->withErrors(['email' => 'Ces identifiants ne correspondent pas à nos enregistrements.'])
-        ->withInput($request->except('password'));
-}
 
     /**
      * Handle user registration.
@@ -124,102 +123,96 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function register(Request $request)
+    {
+        // Validate the registration form data
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|max:100|unique:utilisateurs',
+            'phone' => 'required|string|max:20',
+            'password' => 'required|min:8|confirmed',
+        ], [
+            'name.required' => 'Le nom est obligatoire.',
+            'email.required' => 'L\'email est obligatoire.',
+            'email.email' => 'Veuillez entrer une adresse email valide.',
+            'email.unique' => 'Cette adresse email est déjà utilisée.',
+            'phone.required' => 'Le numéro de téléphone est obligatoire.',
+            'password.required' => 'Le mot de passe est obligatoire.',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('form')
+                ->with('register', true) // To display register form instead of login
+                ->withErrors($validator)
+                ->withInput($request->except('password', 'password_confirmation'));
+        }
+
+        // Create the new user
+        $user = new Utilisateur();
+        $user->nom = $request->name;
+        $user->email = $request->email;
+        $user->telephon = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->ville = 'Non spécifiée'; // Default value, can be updated later
+        $user->statut = 'en_attente'; // Setting default status to awaiting validation
+        $user->save();
+
+        // Generate verification token
+        $token = EmailVerificationHelper::createToken($user->email);
+        
+        // Send verification email
+        $emailSent = EmailHelper::sendVerificationEmail($user->email, $user->nom, $token);
+        
+        if (!$emailSent) {
+            // If email sending fails, still allow registration but inform the user
+            return redirect()->route('form')
+                ->with('success', 'Inscription réussie! Cependant, nous n\'avons pas pu envoyer l\'email de vérification. Veuillez contacter le support.')
+                ->with('warning', 'Votre compte ne sera pas actif tant que votre email n\'est pas vérifié.');
+        }
+
+        // Redirect to login page with success message
+        return redirect()->route('form')
+            ->with('success', 'Inscription réussie! Un email de vérification a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception et cliquer sur le lien de vérification pour activer votre compte.');
+    }
+
     /**
- * Handle user registration.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return \Illuminate\Http\RedirectResponse
- */
-public function register(Request $request)
-{
-    // Validate the registration form data
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|string|max:100',
-        'email' => 'required|email|max:100|unique:utilisateurs',
-        'phone' => 'required|string|max:20',
-        'password' => 'required|min:8|confirmed',
-    ], [
-        'name.required' => 'Le nom est obligatoire.',
-        'email.required' => 'L\'email est obligatoire.',
-        'email.email' => 'Veuillez entrer une adresse email valide.',
-        'email.unique' => 'Cette adresse email est déjà utilisée.',
-        'phone.required' => 'Le numéro de téléphone est obligatoire.',
-        'password.required' => 'Le mot de passe est obligatoire.',
-        'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
-        'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
-    ]);
-
-    if ($validator->fails()) {
+     * Verify user's email.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function verifyEmail(Request $request)
+    {
+        $token = $request->token;
+        $email = $request->email;
+        
+        // Validate token
+        if (!EmailVerificationHelper::validateToken($email, $token)) {
+            return redirect()->route('form')
+                ->with('error', 'Ce lien de vérification est invalide ou a expiré. Veuillez vous réinscrire.');
+        }
+        
+        // Find user and update status
+        $user = Utilisateur::where('email', $email)->first();
+        
+        if (!$user) {
+            return redirect()->route('form')
+                ->with('error', 'Utilisateur non trouvé. Veuillez vous réinscrire.');
+        }
+        
+        // Update user status to 'valide'
+        $user->statut = 'valide';
+        $user->save();
+        
+        // Delete the token
+        EmailVerificationHelper::deleteToken($email);
+        
+        // Redirect to login with success message
         return redirect()->route('form')
-            ->with('register', true) // To display register form instead of login
-            ->withErrors($validator)
-            ->withInput($request->except('password', 'password_confirmation'));
+            ->with('success', 'Votre email a été vérifié avec succès! Vous pouvez maintenant vous connecter.');
     }
-
-    // Create the new user
-    $user = new Utilisateur();
-    $user->nom = $request->name;
-    $user->email = $request->email;
-    $user->telephon = $request->phone;
-    $user->password = Hash::make($request->password);
-    $user->ville = 'Non spécifiée'; // Default value, can be updated later
-    $user->statut = 'en_attente'; // Setting default status to awaiting validation
-    $user->save();
-
-    // Generate verification token
-    $token = EmailVerificationHelper::createToken($user->email);
-    
-    // Send verification email
-    $emailSent = EmailHelper::sendVerificationEmail($user->email, $user->nom, $token);
-    
-    if (!$emailSent) {
-        // If email sending fails, still allow registration but inform the user
-        return redirect()->route('form')
-            ->with('success', 'Inscription réussie! Cependant, nous n\'avons pas pu envoyer l\'email de vérification. Veuillez contacter le support.')
-            ->with('warning', 'Votre compte ne sera pas actif tant que votre email n\'est pas vérifié.');
-    }
-
-    // Redirect to login page with success message
-    return redirect()->route('form')
-        ->with('success', 'Inscription réussie! Un email de vérification a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception et cliquer sur le lien de vérification pour activer votre compte.');
-}
-
-/**
- * Verify user's email.
- *
- * @param  \Illuminate\Http\Request  $request
- * @return \Illuminate\Http\RedirectResponse
- */
-public function verifyEmail(Request $request)
-{
-    $token = $request->token;
-    $email = $request->email;
-    
-    // Validate token
-    if (!EmailVerificationHelper::validateToken($email, $token)) {
-        return redirect()->route('form')
-            ->with('error', 'Ce lien de vérification est invalide ou a expiré. Veuillez vous réinscrire.');
-    }
-    
-    // Find user and update status
-    $user = Utilisateur::where('email', $email)->first();
-    
-    if (!$user) {
-        return redirect()->route('form')
-            ->with('error', 'Utilisateur non trouvé. Veuillez vous réinscrire.');
-    }
-    
-    // Update user status to 'valide'
-    $user->statut = 'valide';
-    $user->save();
-    
-    // Delete the token
-    EmailVerificationHelper::deleteToken($email);
-    
-    // Redirect to login with success message
-    return redirect()->route('form')
-        ->with('success', 'Votre email a été vérifié avec succès! Vous pouvez maintenant vous connecter.');
-}
 
     /**
      * Handle the forgot password request.
@@ -342,7 +335,9 @@ public function verifyEmail(Request $request)
             'user_id', 
             'user_name', 
             'user_email', 
-            'user_type'
+            'user_type',
+            'user_status',
+            'utilisateur'
         ]);
         
         // Invalidate the session

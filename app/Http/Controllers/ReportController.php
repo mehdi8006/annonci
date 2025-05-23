@@ -12,16 +12,11 @@ class ReportController extends Controller
 {
    /**
     * Show report form for an announcement
+    * Note: This method is now protected by middleware, so we know user is authenticated
     */
    public function showReportForm($id)
    {
        $annonce = Annonce::findOrFail($id);
-       
-       // Check if user is logged in
-       if (!Session::has('user_id')) {
-           return redirect()->route('form')
-               ->with('error', 'Veuillez vous connecter pour signaler une annonce.');
-       }
        
        // Check if user has already reported this ad
        $userId = Session::get('user_id');
@@ -39,15 +34,10 @@ class ReportController extends Controller
 
    /**
     * Store a new report
+    * Note: This method is now protected by middleware, so we know user is authenticated
     */
    public function storeReport(Request $request, $id)
    {
-       // Check if user is logged in
-       if (!Session::has('user_id')) {
-           return redirect()->route('form')
-               ->with('error', 'Veuillez vous connecter pour signaler une annonce.');
-       }
-       
        $userId = Session::get('user_id');
        
        // Validate input

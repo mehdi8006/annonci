@@ -65,13 +65,12 @@ class HomeController extends Controller
         $add='0';
         return view('detail', compact('isFavorite','add','userAds','detailsAds','page'));
     }
-     public function detailmember($id){
+    
+    public function detailmember($id){
         $detailsAds = Annonce::where('id', $id)
             ->with(['images','categorie','ville','souscategorie'])
             ->get();
             
-       
-        
         $isFavorite = false;
         // Check if user is logged in using session
         if (Session::has('user_id')) {
@@ -87,14 +86,10 @@ class HomeController extends Controller
 
     /**
      * Ajouter une annonce aux favoris
+     * Note: This method is now protected by middleware, so we know user is authenticated
      */
     public function addToFavorites($id)
     {
-        // Vérifier si l'utilisateur est connecté
-        if (!Session::has('user_id')) {
-            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour ajouter des favoris');
-        }
-
         $userId = Session::get('user_id');
         
         // Vérifier si l'annonce existe
@@ -123,14 +118,10 @@ class HomeController extends Controller
 
     /**
      * Supprimer une annonce des favoris
+     * Note: This method is now protected by middleware, so we know user is authenticated
      */
     public function removeFromFavorites($id)
     {
-        // Vérifier si l'utilisateur est connecté
-        if (!Session::has('user_id')) {
-            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour gérer vos favoris');
-        }
-
         $userId = Session::get('user_id');
         
         // Trouver et supprimer le favori
@@ -148,14 +139,10 @@ class HomeController extends Controller
     
     /**
      * Afficher tous les favoris de l'utilisateur connecté
+     * Note: This method is now protected by middleware, so we know user is authenticated
      */
     public function showFavorites()
     {
-        // Vérifier si l'utilisateur est connecté
-        if (!Session::has('user_id')) {
-            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour voir vos favoris');
-        }
-
         $userId = Session::get('user_id');
         
         // Récupérer tous les favoris de l'utilisateur avec les détails des annonces

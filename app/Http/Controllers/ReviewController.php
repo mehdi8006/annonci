@@ -12,14 +12,10 @@ class ReviewController extends Controller
 {
     /**
      * Show the form for creating a new review.
+     * Note: This method is now protected by middleware, so we know user is authenticated
      */
     public function create($id)
     {
-        // Check if user is logged in
-        if (!Session::has('user_id')) {
-            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour laisser un avis.');
-        }
-        
         $userId = Session::get('user_id');
         $annonce = Annonce::findOrFail($id);
         
@@ -42,14 +38,10 @@ class ReviewController extends Controller
 
     /**
      * Store a newly created review in storage.
+     * Note: This method is now protected by middleware, so we know user is authenticated
      */
     public function store(Request $request, $id)
     {
-        // Check if user is logged in
-        if (!Session::has('user_id')) {
-            return redirect()->route('form')->with('error', 'Veuillez vous connecter pour laisser un avis.');
-        }
-        
         $userId = Session::get('user_id');
         $annonce = Annonce::findOrFail($id);
         

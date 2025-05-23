@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
 use App\Models\Annonce;
 use App\Models\Categorie;
 use App\Models\SousCategorie;
@@ -16,23 +16,10 @@ use Illuminate\Support\Facades\Validator;
 class MemberController extends Controller
 {
     /**
-     * Check if user is authenticated
-     */
-    private function checkAuth()
-    {
-        if (!session()->has('user_id')) {
-            return redirect()->route('form')->withErrors(['auth' => 'Vous devez être connecté pour accéder à cette page.']);
-        }
-        return null;
-    }
-
-    /**
      * Show member dashboard
      */
     public function dashboard()
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $userId = session('user_id');
         
         // Get statistics for dashboard
@@ -67,8 +54,6 @@ class MemberController extends Controller
      */
     public function mesAnnonces()
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $userId = session('user_id');
         
         $annonces = Annonce::where('id_utilisateur', $userId)
@@ -86,8 +71,6 @@ class MemberController extends Controller
      */
     public function createAnnonce()
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $categories = Categorie::all();
         $sousCategories = SousCategorie::all();
         $villes = Ville::all();
@@ -101,12 +84,10 @@ class MemberController extends Controller
      */
     public function storeAnnonce(Request $request)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $validator = Validator::make($request->all(), [
             'titre' => 'required|string|max:255',
-            'description' => 'required|string',
-            'prix' => 'required|numeric|min:0',
+            'description' => 'required|string|max:1000',
+            'prix' => 'required|numeric|min:0|max:10',
             'id_ville' => 'required|exists:villes,id',
             'id_categorie' => 'required|exists:categories,id',
             'id_sous_categorie' => 'nullable|exists:sous_categories,id',
@@ -152,8 +133,6 @@ class MemberController extends Controller
      */
     public function editAnnonce($id)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $annonce = Annonce::where('id', $id)
             ->where('id_utilisateur', session('user_id'))
             ->with('images')
@@ -176,8 +155,6 @@ class MemberController extends Controller
      */
     public function updateAnnonce(Request $request, $id)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $annonce = Annonce::where('id', $id)
             ->where('id_utilisateur', session('user_id'))
             ->first();
@@ -217,8 +194,6 @@ class MemberController extends Controller
      */
     public function deleteAnnonce($id)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $annonce = Annonce::where('id', $id)
             ->where('id_utilisateur', session('user_id'))
             ->first();
@@ -243,8 +218,6 @@ class MemberController extends Controller
      */
     public function mesFavoris()
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $userId = session('user_id');
         
         $favoris = Favorite::where('id_utilisateur', $userId)
@@ -264,8 +237,6 @@ class MemberController extends Controller
      */
     public function addFavorite($id)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $userId = session('user_id');
         
         // Check if already in favorites
@@ -290,8 +261,6 @@ class MemberController extends Controller
      */
     public function removeFavorite($id)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $favorite = Favorite::where('id_utilisateur', session('user_id'))
             ->where('id_annonce', $id)
             ->first();
@@ -308,8 +277,6 @@ class MemberController extends Controller
      */
     public function parametres()
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $userId = session('user_id');
         $user = Utilisateur::find($userId);
         
@@ -327,8 +294,6 @@ class MemberController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $userId = session('user_id');
         $user = Utilisateur::find($userId);
 
@@ -364,8 +329,6 @@ class MemberController extends Controller
      */
     public function updatePassword(Request $request)
     {
-        if ($authCheck = $this->checkAuth()) return $authCheck;
-
         $userId = session('user_id');
         $user = Utilisateur::find($userId);
 
