@@ -395,6 +395,9 @@
         <a href="{{ route('admin.dashboard') }}" class="admin-nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <i class="fas fa-tachometer-alt"></i> Tableau de bord
         </a>
+         <a href="{{ route('admin.statistics.index') }}" class="admin-nav-item {{ request()->routeIs('admin.statistics.*') ? 'active' : '' }}">
+            <i class="fas fa-chart-bar"></i> Statistiques
+        </a>
         
         <div class="admin-nav-section">Gestion des utilisateurs</div>
         
@@ -422,6 +425,7 @@
         </a>
         
         <div class="admin-nav-section">Autres</div>
+
         
         <a href="{{ route('homeshow') }}" class="admin-nav-item">
             <i class="fas fa-home"></i> Retour au site

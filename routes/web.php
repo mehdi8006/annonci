@@ -156,4 +156,9 @@ Route::prefix('admin')->name('admin.')->middleware([\App\Http\Middleware\AdminMi
     Route::post('/reviews/ai-check', [App\Http\Controllers\Admin\AdminReviewController::class, 'aiCheckReviews'])->name('reviews.aiCheck');
     Route::delete('/reviews/delete-rejected', [App\Http\Controllers\Admin\AdminReviewController::class, 'deleteAllRejected'])->name('reviews.deleteAllRejected');
     Route::get('/reviews/stats', [App\Http\Controllers\Admin\AdminReviewController::class, 'getStats'])->name('reviews.stats');
+// Statistics Management - ADD THESE ROUTES IN THE ADMIN GROUP
+    Route::get('/statistics', [App\Http\Controllers\Admin\AdminStatisticController::class, 'index'])->name('statistics.index');
+    Route::get('/statistics/export', [App\Http\Controllers\Admin\AdminStatisticController::class, 'exportCsv'])->name('statistics.export');
+    Route::get('/statistics/data', [App\Http\Controllers\Admin\AdminStatisticController::class, 'getData'])->name('statistics.data');
+
 });
