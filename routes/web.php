@@ -115,7 +115,7 @@ Route::prefix('admin')->name('admin.')->middleware([\App\Http\Middleware\AdminMi
     Route::put('/annonces/{id}/status', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'updateStatus'])->name('annonces.updateStatus');
     Route::delete('/annonces/{id}', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'destroy'])->name('annonces.destroy');
     Route::post('/annonces/{id}/approve', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'approve'])->name('annonces.approve');
-    
+     Route::post('/annonces/delete-expired', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'deleteExpiredAnnonces'])->name('annonces.deleteExpired');
     // Bulk and processing routes for annonces
     Route::post('/annonces/activate-all-pending', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'activateAllPending'])->name('annonces.activateAllPending');
     Route::post('/annonces/{id}/process-and-keep', [App\Http\Controllers\Admin\AdminAnnonceController::class, 'processAndKeep'])->name('annonces.processAndKeep');

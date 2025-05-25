@@ -10,6 +10,11 @@
             <button type="button" class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#activateAllModal">
                 <i class="fas fa-check-double me-1"></i> Activer tout en attente
             </button>
+            @if($stats['expirees'] > 0)
+                <button type="button" class="btn btn-danger shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteExpiredModal">
+                    <i class="fas fa-clock me-1"></i> Supprimer expirées
+                </button>
+            @endif
             <button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#filterModal">
                 <i class="fas fa-filter me-1"></i> Filtrer
             </button>
@@ -83,6 +88,27 @@
         </div>
     </div>
 
+    <!-- Additional Statistics Row -->
+    @if($stats['expirees'] > 0)
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-warning text-white me-3">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Expirées (>3 mois)</div>
+                            <div class="h4 mb-0">{{ number_format($stats['expirees']) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Activate All Modal -->
     <div class="modal fade" id="activateAllModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -104,6 +130,38 @@
                         @csrf
                         <button type="submit" class="btn btn-success">
                             <i class="fas fa-check me-1"></i> Confirmer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Expired Modal -->
+    <div class="modal fade" id="deleteExpiredModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer toutes les annonces expirées (validées depuis plus de 3 mois) ?</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>{{ $stats['expirees'] }}</strong> annonce(s) expirée(s) seront supprimées.
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Les annonces ne seront pas définitivement supprimées, mais marquées comme "supprimées" et pourront être restaurées si nécessaire.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form action="{{ route('admin.annonces.deleteExpired') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i> Confirmer
                         </button>
                     </form>
                 </div>
@@ -413,6 +471,7 @@
         vertical-align: middle;
         padding: 0.75rem 0.5rem;
     }
+    
     
     /* Rating Stars */
     .rating-stars {

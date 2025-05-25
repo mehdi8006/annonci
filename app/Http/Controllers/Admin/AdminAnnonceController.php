@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Annonce;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AdminAnnonceController extends Controller
 {
@@ -60,11 +61,16 @@ class AdminAnnonceController extends Controller
      */
     private function getAnnonceStats()
     {
+        $threeMonthsAgo = Carbon::now()->subMonths(3);
+        
         return [
             'total' => Annonce::count(),
             'en_attente' => Annonce::where('statut', 'en_attente')->count(),
             'validee' => Annonce::where('statut', 'validee')->count(),
             'supprimee' => Annonce::where('statut', 'supprimee')->count(),
+            'expirees' => Annonce::where('statut', 'validee')
+                                ->where('updated_at', '<', $threeMonthsAgo)
+                                ->count(),
         ];
     }
     
@@ -114,6 +120,20 @@ class AdminAnnonceController extends Controller
                           ->update(['statut' => 'validee']);
         
         return redirect()->back()->with('success', "{$updated} annonce(s) activée(s) avec succès.");
+    }
+    
+    /**
+     * Delete all expired annonces (older than 3 months)
+     */
+    public function deleteExpiredAnnonces()
+    {
+        $threeMonthsAgo = Carbon::now()->subMonths(3);
+        
+        $updated = Annonce::where('statut', 'validee')
+                          ->where('updated_at', '<', $threeMonthsAgo)
+                          ->update(['statut' => 'supprimee']);
+        
+        return redirect()->back()->with('success', "{$updated} annonce(s) expirée(s) supprimée(s) avec succès.");
     }
     
     /**

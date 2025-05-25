@@ -12,6 +12,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class MemberController extends Controller
 {
@@ -84,6 +85,9 @@ class MemberController extends Controller
      */
     public function storeAnnonce(Request $request)
     {
+        $userId = session('user_id');
+        
+        // Basic validation
         $validator = Validator::make($request->all(), [
             'titre' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
@@ -91,7 +95,14 @@ class MemberController extends Controller
             'id_ville' => 'required|exists:villes,id',
             'id_categorie' => 'required|exists:categories,id',
             'id_sous_categorie' => 'nullable|exists:sous_categories,id',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images' => 'required|array|min:1', // At least 1 image required
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'images.required' => 'Au moins une image est obligatoire pour votre annonce.',
+            'images.min' => 'Vous devez télécharger au moins une image.',
+            'images.*.image' => 'Le fichier doit être une image.',
+            'images.*.mimes' => 'Les images doivent être au format jpeg, png, jpg ou gif.',
+            'images.*.max' => 'Chaque image ne doit pas dépasser 2MB.'
         ]);
 
         if ($validator->fails()) {
@@ -100,29 +111,65 @@ class MemberController extends Controller
                 ->withInput();
         }
 
+        // Check for duplicate announcements (same title by same user)
+        $duplicateCheck = Annonce::where('id_utilisateur', $userId)
+            ->where('titre', trim($request->titre))
+            ->where('statut', '!=', 'supprimee')
+            ->first();
+
+        if ($duplicateCheck) {
+            return redirect()->back()
+                ->withErrors(['titre' => 'Vous avez déjà une annonce avec ce titre. Veuillez choisir un titre différent.'])
+                ->withInput();
+        }
+
+        // Check daily limit (3 announcements per day)
+        $today = Carbon::today();
+        $todayAnnouncesCount = Annonce::where('id_utilisateur', $userId)
+            ->whereDate('created_at', $today)
+            ->count();
+
+        if ($todayAnnouncesCount >= 3) {
+            return redirect()->back()
+                ->withErrors(['limite' => 'Vous avez atteint la limite de 3 annonces par jour. Veuillez réessayer demain.'])
+                ->withInput();
+        }
+
+        // Additional similarity check to prevent near-duplicate content
+        $similarAnnonce = Annonce::where('id_utilisateur', $userId)
+            ->where('id_categorie', $request->id_categorie)
+            ->where('prix', $request->prix)
+            ->where('statut', '!=', 'supprimee')
+            ->whereRaw('LOWER(description) LIKE ?', ['%' . strtolower(substr($request->description, 0, 50)) . '%'])
+            ->first();
+
+        if ($similarAnnonce) {
+            return redirect()->back()
+                ->withErrors(['description' => 'Une annonce similaire existe déjà dans votre compte. Veuillez modifier le contenu.'])
+                ->withInput();
+        }
+
         // Create announcement
         $annonce = new Annonce();
-        $annonce->titre = $request->titre;
-        $annonce->description = $request->description;
+        $annonce->titre = trim($request->titre);
+        $annonce->description = trim($request->description);
         $annonce->prix = $request->prix;
-        $annonce->id_utilisateur = session('user_id');
+        $annonce->id_utilisateur = $userId;
         $annonce->id_ville = $request->id_ville;
         $annonce->id_categorie = $request->id_categorie;
         $annonce->id_sous_categorie = $request->id_sous_categorie;
         $annonce->statut = 'en_attente';
         $annonce->save();
 
-        // Handle image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $imageFile) {
-                $imagePath = $imageFile->store('annonces', 'public');
-                
-                $image = new Image();
-                $image->id_annonce = $annonce->id;
-                $image->url = $imagePath;
-                $image->principale = ($index === 0); // First image is primary
-                $image->save();
-            }
+        // Handle image uploads (we already validated that at least 1 image exists)
+        foreach ($request->file('images') as $index => $imageFile) {
+            $imagePath = $imageFile->store('annonces', 'public');
+            
+            $image = new Image();
+            $image->id_annonce = $annonce->id;
+            $image->url = $imagePath;
+            $image->principale = ($index === 0); // First image is primary
+            $image->save();
         }
 
         return redirect()->route('member.annonces')->with('success', 'Annonce créée avec succès!');
@@ -155,8 +202,9 @@ class MemberController extends Controller
      */
     public function updateAnnonce(Request $request, $id)
     {
+        $userId = session('user_id');
         $annonce = Annonce::where('id', $id)
-            ->where('id_utilisateur', session('user_id'))
+            ->where('id_utilisateur', $userId)
             ->first();
 
         if (!$annonce) {
@@ -178,8 +226,21 @@ class MemberController extends Controller
                 ->withInput();
         }
 
-        $annonce->titre = $request->titre;
-        $annonce->description = $request->description;
+        // Check for duplicate title (excluding current announcement)
+        $duplicateCheck = Annonce::where('id_utilisateur', $userId)
+            ->where('titre', trim($request->titre))
+            ->where('id', '!=', $id)
+            ->where('statut', '!=', 'supprimee')
+            ->first();
+
+        if ($duplicateCheck) {
+            return redirect()->back()
+                ->withErrors(['titre' => 'Vous avez déjà une autre annonce avec ce titre. Veuillez choisir un titre différent.'])
+                ->withInput();
+        }
+
+        $annonce->titre = trim($request->titre);
+        $annonce->description = trim($request->description);
         $annonce->prix = $request->prix;
         $annonce->id_ville = $request->id_ville;
         $annonce->id_categorie = $request->id_categorie;
