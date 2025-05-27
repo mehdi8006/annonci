@@ -152,6 +152,31 @@
         border-color: #ef4444;
         background-color: #fef2f2;
     }
+
+    /* Password input wrapper for eye icon */
+    .password-input-wrapper {
+        position: relative;
+    }
+
+    .password-input-wrapper .form-input {
+        padding-right: 45px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 16px;
+        transition: color 0.3s ease;
+        user-select: none;
+    }
+
+    .password-toggle:hover {
+        color: #3b82f6;
+    }
  
     .phone-input-wrapper {
         display: flex;
@@ -358,8 +383,11 @@
 
                     <div class="form-group">
                         <label class="form-label">Mot de passe</label>
-                        <input type="password" name="password" class="form-input {{ $errors->has('password') && !session('register') ? 'is-invalid' : '' }}" 
-                              placeholder="Entrez votre mot de passe" required>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password" id="loginPassword" class="form-input {{ $errors->has('password') && !session('register') ? 'is-invalid' : '' }}" 
+                                  placeholder="Entrez votre mot de passe" required>
+                            <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('loginPassword', this)"></i>
+                        </div>
                         @if($errors->has('password') && !session('register'))
                             <div class="error-feedback">{{ $errors->first('password') }}</div>
                         @endif
@@ -410,8 +438,11 @@
                 
                     <div class="form-group">
                         <label class="form-label">Mot de passe</label>
-                        <input type="password" name="password" class="form-input {{ $errors->has('password') && session('register') ? 'is-invalid' : '' }}" 
-                               placeholder="Créez un mot de passe" required>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password" id="registerPassword" class="form-input {{ $errors->has('password') && session('register') ? 'is-invalid' : '' }}" 
+                                   placeholder="Créez un mot de passe" required>
+                            <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('registerPassword', this)"></i>
+                        </div>
                         @if($errors->has('password') && session('register'))
                             <div class="error-feedback">{{ $errors->first('password') }}</div>
                         @endif
@@ -419,8 +450,11 @@
                 
                     <div class="form-group">
                         <label class="form-label">Confirmez le mot de passe</label>
-                        <input type="password" name="password_confirmation" class="form-input" 
-                               placeholder="Confirmez le mot de passe" required>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password_confirmation" id="confirmPassword" class="form-input" 
+                                   placeholder="Confirmez le mot de passe" required>
+                            <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('confirmPassword', this)"></i>
+                        </div>
                     </div>
                 
                     <button type="submit" class="submit-btn">S'inscrire</button>
@@ -450,6 +484,21 @@
                 document.getElementById('loginForm').classList.add('active');
             } else {
                 document.getElementById('registerForm').classList.add('active');
+            }
+        }
+
+        // Fonction pour basculer la visibilité du mot de passe
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
         

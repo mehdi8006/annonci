@@ -128,6 +128,31 @@
         border-color: #ef4444;
         background-color: #fef2f2;
     }
+
+    /* Password input wrapper for eye icon */
+    .password-input-wrapper {
+        position: relative;
+    }
+
+    .password-input-wrapper .form-input {
+        padding-right: 45px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 16px;
+        transition: color 0.3s ease;
+        user-select: none;
+    }
+
+    .password-toggle:hover {
+        color: #3b82f6;
+    }
  
     /* Boutons */
     .submit-btn {
@@ -269,8 +294,11 @@
                     
                     <div class="form-group">
                         <label class="form-label">Nouveau mot de passe</label>
-                        <input type="password" name="password" class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}" 
-                               placeholder="Entrez votre nouveau mot de passe" required>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password" id="newPassword" class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}" 
+                                   placeholder="Entrez votre nouveau mot de passe" required>
+                            <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('newPassword', this)"></i>
+                        </div>
                         @if($errors->has('password'))
                             <div class="error-feedback">{{ $errors->first('password') }}</div>
                         @endif
@@ -278,8 +306,11 @@
                     
                     <div class="form-group">
                         <label class="form-label">Confirmez le mot de passe</label>
-                        <input type="password" name="password_confirmation" class="form-input" 
-                               placeholder="Confirmez votre nouveau mot de passe" required>
+                        <div class="password-input-wrapper">
+                            <input type="password" name="password_confirmation" id="confirmNewPassword" class="form-input" 
+                                   placeholder="Confirmez votre nouveau mot de passe" required>
+                            <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('confirmNewPassword', this)"></i>
+                        </div>
                     </div>
      
                     <button type="submit" class="submit-btn">Réinitialiser le mot de passe</button>
@@ -289,7 +320,24 @@
             </div>
         </div>
     </div>
-        @include('components.footer')
 
+    <script>
+        // Fonction pour basculer la visibilité du mot de passe
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+
+    @include('components.footer')
 </body>
 </html>

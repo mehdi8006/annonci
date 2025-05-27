@@ -402,7 +402,7 @@
         border-radius: 8px;
         padding: 30px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
+        z-index: 1200;
         min-width: 500px;
         text-align: center;
         max-width: 90%;
@@ -483,7 +483,7 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
-        z-index: 999;
+        z-index: 1100;
     }
     
     .modal-overlay4.active {
@@ -823,7 +823,7 @@
                     <a href="#contact">
                         <button class="contact-button4" type="button" onclick="showContactModal()">
                             <i class="fas fa-phone"></i>
-                            Contacter le vendeur
+                            Contacter 
                         </button>
                     </a>
                     <div class="modal-overlay4"></div>
@@ -847,7 +847,7 @@
                                 @method('DELETE')
                                 <button type="submit" class="favorite-button4 active">
                                     <i class="fas fa-heart"></i>
-                                    Retirer des favoris
+                                    favoris
                                 </button>
                             </form>
                         @else
@@ -855,7 +855,7 @@
                                 @csrf
                                 <button type="submit" class="favorite-button4">
                                     <i class="far fa-heart"></i>
-                                    Ajouter aux favoris
+                                    favoris
                                 </button>
                             </form>
                         @endif
@@ -863,19 +863,19 @@
                         <a href="{{ route('form') }}">
                             <button class="favorite-button4">
                                 <i class="far fa-heart"></i>
-                                Connectez-vous pour ajouter aux favoris
+                               favoris
                             </button>
                         </a>
                     @endif
                      @if(session()->has('user_id'))
                     <a href="{{ route('annonces.report', $ad->id) }}" class="report-button44">
                     <i class="fas fa-flag"></i>
-                    Signaler l'annonce
+                    Signaler 
                     </a>
                     @else
                     <a href="{{ route('form') }}" class="report-button44">
                     <i class="fas fa-flag"></i>
-                    Connectez-vous pour signaler
+                  signaler
                     </a>
                     @endif
                 </div>
