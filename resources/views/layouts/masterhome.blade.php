@@ -8,48 +8,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <title>Document</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1030;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .main {
-            flex: 1;
-            padding: 80px 20px 20px; /* top padding = navbar height */
-        }
-
-        .footr {
-            background-color: #f8f9fa;
-        }
-    </style>
+ 
 </head>
 <body>
 
-    <div class="nav">
         @include('components.nav')
-    </div>
 
     <div class="main">
         @yield('main')
