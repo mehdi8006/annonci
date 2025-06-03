@@ -1,163 +1,193 @@
 
     <style>
-        
-      
+        :root {
+            --coral: #ff7b7b;
+            --coral-light: #ffb3b3;
+            --blue: #4a90e2;
+            --blue-light: #7bb3f0;
+            --orange: #ff6b35;
+            --orange-dark: #e55a2b;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+        }
 
-        .banner0 {
-            background-color: #ffffff;
-            border-radius: 16px;
-            padding: 30px;
+      
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -20%;
+            width: 60%;
+            height: 80%;
+            background: linear-gradient(45deg, var(--coral), var(--coral-light));
+            border-radius: 50% 60% 70% 40%;
+            opacity: 0.8;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            right: -15%;
+            width: 50%;
+            height: 70%;
+            background: linear-gradient(135deg, var(--blue), var(--blue-light));
+            border-radius: 40% 70% 60% 50%;
+            opacity: 0.9;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
             text-align: center;
-            max-width: 1200px;
-            width: 100%;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: clamp(1.75rem, 4.2vw, 3.15rem);
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 3rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+            color: var(--white);
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
             position: relative;
             overflow: hidden;
         }
 
-        .banner0::before {
+        .cta-button::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #2b3dff, #e54a1f);
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
 
-        .text0 h1 {
-            color: #2c3e50;
-            font-size: clamp(1.5rem, 2.5vw, 1.5rem);
-            font-weight: 650;
-            margin-bottom: 20px;
-            line-height: 2;
+        .cta-button:hover::before {
+            left: 100%;
         }
 
-        .highlight0 {
-            color: #ff5c2b;
-            position: relative;
-            display: inline-block;
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+            color: var(--white);
         }
 
-        .highlight0::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            left: -2px;
-            right: -2px;
-            height: 8px;
-            background-color: rgba(255, 92, 43, 0.1);
-            z-index: -1;
-            transform: skew(-12deg);
-        }
-
-        .tagline0 {
-            color: #64748b;
+        .cta-button i {
             font-size: 1.3rem;
-            margin-bottom: 48px;
-            font-weight: 500;
         }
 
-        .cta-container0 {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
+        /* Additional floating elements */
+        .floating-shape {
+            position: absolute;
+            opacity: 0.6;
+            animation: floatRandom 10s ease-in-out infinite;
         }
 
-        .cta-button0 {
-            background-color: #ff5c2b;
-            color: #ffffff;
-            border: none;
-            padding: 16px 40px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.125rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.2s ease;
-            text-decoration: none;
+        .floating-shape:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            width: 60px;
+            height: 60px;
+            background: var(--coral);
+            border-radius: 50%;
+            animation-delay: -2s;
         }
 
-        .cta-button0:hover {
-            background-color: #e54a1f;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 92, 43, 0.3);
+        .floating-shape:nth-child(2) {
+            bottom: 30%;
+            right: 20%;
+            width: 40px;
+            height: 40px;
+            background: var(--blue);
+            border-radius: 50%;
+            animation-delay: -4s;
         }
 
-        .cta-button0:active {
-            transform: translateY(0);
+        @keyframes floatRandom {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
+            }
+            25% {
+                transform: translateY(-15px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-10px) translateX(-5px);
+            }
+            75% {
+                transform: translateY(-20px) translateX(15px);
+            }
         }
-        
-        
-
-       
-
-        
 
         @media (max-width: 768px) {
-           
-
+            .hero-content {
+                padding: 1rem;
+            }
             
-            .cta-container0 {
-                flex-direction: column;
+            .hero-title {
+                margin-bottom: 2rem;
             }
-
-            .cta-button0 {
-                width: 100%;
-                justify-content: center;
+            
+            .cta-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
             }
-        }
-
-        /* Decorative elements */
-        .decoration0 {
-            position: absolute;
-            opacity: 0.05;
-            pointer-events: none;
-        }
-
-        .decoration-10 {
-            top: 20px;
-            right: 20px;
-            width: 120px;
-            height: 120px;
-            background-color: #ff5c2b;
-
-            border-radius: 50%;
-        }
-
-        .decoration-20 {
-            bottom: 20px;
-            left: 20px;
-            width: 80px;
-            height: 80px;
-            background-color: #ff5c2b;
-            border-radius: 8px;
-            transform: rotate(45deg);
         }
     </style>
-</head>
 <body>
-    <main class="banner0">
-        <div class="decoration0 decoration-10"></div>
-        <div class="decoration0 decoration-20"></div>
-       <div class="text0">
-         <h1>Achetez, vendez, <span class="highlight0">échangez</span> – facilement et rapidement.</h1>
+    <section class="hero-section">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
         
-        <p class="tagline0">La marketplace qui simplifie tous vos échanges</p>
-        </div> 
-       
-        <div class="cta-container0">
-            <a href="{{ route('member.annonces.create') }}">
-            <button class="cta-button0">
-                <i class="fa-solid fa-square-plus"></i>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                C'est le moment de vendre
+            </h1>
+            
+            <a href="{{ route('member.annonces.create') }}" class="cta-button">
+                <i class="fa-solid fa-plus"></i>
                 Déposer une annonce
-            </button>
-            </a> 
+            </a>
         </div>
-    </main>
+    </section>
 </body>
-</html>
