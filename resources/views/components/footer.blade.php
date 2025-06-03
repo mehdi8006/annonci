@@ -101,7 +101,7 @@
             }
         }
     </style>
-<body>
+
     <footer class="footer-simple">
         <div class="container py-4">
             <div class="row g-4 align-items-center">
@@ -157,4 +157,4 @@
         </div>
     </footer>
 
-</body>
+

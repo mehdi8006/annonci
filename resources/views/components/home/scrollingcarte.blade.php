@@ -10,7 +10,9 @@
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
-    
+    .e{
+        padding: 0px 70px ;
+    }
     .horizontal-scroll::-webkit-scrollbar {
         display: none;
     }
@@ -79,7 +81,7 @@
         }
     }
 </style>
-
+<div class="e">
 <!-- Section Title -->
 <div class="container-fluid px-3">
     <h4 class="fw-bold text-dark mb-4 mt-4">{{ $title }}</h4>
@@ -114,7 +116,7 @@
                         
                         <!-- Price -->
                         <div class="mb-2">
-                            <span class="h6 fw-bold text-dark mb-0 price-text">{{ number_format($ad->prix, 0, ',', ' ') }} €</span>
+                            <span class="h6 fw-bold text-dark mb-0 price-text">{{ number_format($ad->prix, 0, ',', ' ') }} DH</span>
                         </div>
                         
                         <!-- Location -->
@@ -149,7 +151,7 @@
         </div>
     </div>
 </div>
-
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Enhanced smooth scrolling for better UX

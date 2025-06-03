@@ -174,7 +174,7 @@
             }
         }
     </style>
-<body>
+
     <section class="hero-section">
         <div class="floating-shape"></div>
         <div class="floating-shape"></div>
@@ -190,4 +190,4 @@
             </a>
         </div>
     </section>
-</body>
+

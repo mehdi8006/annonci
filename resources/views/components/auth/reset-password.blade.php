@@ -4,325 +4,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Annoncia - Réinitialisation du mot de passe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <style>
-    /* Container et Wrapper */
-    .auth-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background-color: #f8f9fa;
-        padding: 20px;
-    }
- 
-    .auth-container {
-        display: flex;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        max-width: 1200px;
-        width: 100%;
-        margin: 0 auto;
-    }
- 
-    /* Section gauche (branding) */
-    .auth-left {
-        background-color: #f5f9ff;
-        padding: 60px;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
- 
-    .brand-logo {
-        font-size: 72px;
-        color: #3b82f6;
-        margin-bottom: 40px;
-    }
- 
-    .brand-title {
-        font-size: 28px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 16px;
-    }
- 
-    .brand-subtitle {
-        font-size: 18px;
-        color: #666;
-        margin-bottom: 8px;
-    }
- 
-    .brand-caption {
-        font-size: 16px;
-        color: #888;
-    }
- 
-    .brand-link {
-        color: #3b82f6;
-        text-decoration: none;
-        font-weight: 500;
-    }
- 
-    /* Section droite (formulaires) */
-    .auth-right {
-        flex: 1;
-        padding: 60px;
-        background-color: white;
-    }
- 
-    .auth-header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
- 
-    .auth-title {
-        font-size: 32px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 12px;
-    }
- 
-    .auth-subtitle {
-        font-size: 16px;
-        color: #666;
-        margin-bottom: 30px;
-    }
- 
-    /* Formulaires */
-    .form-group {
-        margin-bottom: 24px;
-    }
- 
-    .form-label {
-        display: block;
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 8px;
-        font-size: 14px;
-    }
- 
-    .form-input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        font-size: 14px;
-        background-color: #f9fafb;
-        transition: all 0.3s ease;
-    }
- 
-    .form-input:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        background-color: white;
-    }
-    
-    .form-input.is-invalid {
-        border-color: #ef4444;
-        background-color: #fef2f2;
-    }
-
-    /* Password input wrapper for eye icon */
-    .password-input-wrapper {
-        position: relative;
-    }
-
-    .password-input-wrapper .form-input {
-        padding-right: 45px;
-    }
-
-    .password-toggle {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        color: #6b7280;
-        font-size: 16px;
-        transition: color 0.3s ease;
-        user-select: none;
-    }
-
-    .password-toggle:hover {
-        color: #3b82f6;
-    }
- 
-    /* Boutons */
-    .submit-btn {
-        width: 100%;
-        padding: 14px 24px;
-        background-color: #3b82f6;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-top: 24px;
-    }
- 
-    .submit-btn:hover {
-        background-color: #2563eb;
-    }
-    
-    .back-link {
-        display: block;
-        text-align: center;
-        margin-top: 24px;
-        color: #6b7280;
-        text-decoration: none;
-        font-size: 14px;
-    }
-    
-    .back-link:hover {
-        color: #3b82f6;
-    }
-    
-    /* Alert messages */
-    .alert {
-        padding: 12px 16px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        font-size: 14px;
-    }
-    
-    .alert-success {
-        background-color: #d1fae5;
-        border: 1px solid #10b981;
-        color: #065f46;
-    }
-    
-    .alert-danger {
-        background-color: #fee2e2;
-        border: 1px solid #ef4444;
-        color: #b91c1c;
-    }
-    
-    .error-feedback {
-        color: #ef4444;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-    
-    /* Animation */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
+        :root {
+            --bs-primary: #3b82f6;
+            --bs-primary-rgb: 59, 130, 246;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        .c{
+            padding-top:80px; 
         }
-    }
-    
-    .auth-form {
-        animation: fadeIn 0.3s ease-in-out;
-    }
- 
-    /* Responsive design */
-    @media (max-width: 750px) {
-        .auth-left {
-            display: none;
+        body {
+            background-color: #f8f9fa;
         }
-    }
-    
-    @media (max-width: 640px) {
-        .auth-wrapper {
-            padding: 10px;
+        
+        .auth-container {
+            min-height: 100vh;
         }
- 
-        .auth-right {
-            padding: 30px 20px;
+        
+        .brand-section {
+            background: linear-gradient(135deg, #f5f9ff 0%, #e0f2fe 100%);
         }
- 
-        .brand-title {
-            font-size: 24px;
+        
+        .brand-logo {
+            font-size: 4rem;
+            color: var(--bs-primary);
         }
- 
-        .auth-title {
-            font-size: 28px;
+        
+        .auth-card {
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         }
-    }
+        
+        .form-floating > label {
+            font-weight: 500;
+        }
+        
+        .password-toggle {
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: var(--bs-primary);
+        }
+        
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+        
+        .back-link {
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--bs-primary);
+        }
+        
+        @media (max-width: 991.98px) {
+            .brand-section {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
     @include('components.nav')
-    <div class="auth-wrapper">
-        <div class="auth-container">
-            <!-- Section gauche (Branding) -->
-            <div class="auth-left">
-                <i class="fa-solid fa-bag-shopping brand-logo"></i>
-                <h2 class="brand-title">Achetez et vendez facilement</h2>
-                <p class="brand-subtitle">Annoncia, votre <a href="#" class="brand-link">plateforme de confiance</a> pour les</p>
-                <p class="brand-caption">transactions en ligne sécurisées.</p>
-            </div>
-     
-            <!-- Section droite (Formulaire de réinitialisation) -->
-            <div class="auth-right">
-                <div class="auth-header">
-                    <h1 class="auth-title">Réinitialisation du mot de passe</h1>
-                    <p class="auth-subtitle">Veuillez créer un nouveau mot de passe pour votre compte.</p>
-                </div>
+    <div class="c">
     
-                <!-- Flash Messages -->
-                @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
+    <div class="container-fluid auth-container">
+        <div class="row h-100">
+            <!-- Branding Section -->
+            <div class="col-lg-6 brand-section d-flex align-items-center justify-content-center">
+                <div class="text-center p-5">
+                    <i class="fa-solid fa-bag-shopping brand-logo mb-4"></i>
+                    <h2 class="display-6 fw-bold text-dark mb-3">Achetez et vendez facilement</h2>
+                    <p class="lead text-muted mb-2">
+                        Annoncia, votre <a href="#" class="text-primary text-decoration-none fw-semibold">plateforme de confiance</a> pour les
+                    </p>
+                    <p class="text-muted">transactions en ligne sécurisées.</p>
                 </div>
-                @endif
-                
-                @if(session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
+            </div>
+
+            <!-- Form Section -->
+            <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                <div class="w-100" style="max-width: 480px;">
+                    <div class="card auth-card">
+                        <div class="card-body p-5">
+                            <!-- Header -->
+                            <div class="text-center mb-4">
+                                <div class="mb-3">
+                                    <i class="fa-solid fa-shield-halved text-success" style="font-size: 3rem;"></i>
+                                </div>
+                                <h1 class="h3 fw-bold text-dark mb-3">Créer un nouveau mot de passe</h1>
+                                <p class="text-muted">
+                                    Veuillez créer un nouveau mot de passe sécurisé pour votre compte.
+                                </p>
+                            </div>
+
+                            <!-- Flash Messages -->
+                            @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fa-solid fa-check-circle me-2"></i>
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            @endif
+                            
+                            @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fa-solid fa-exclamation-circle me-2"></i>
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            @endif
+
+                            <!-- Reset Password Form -->
+                            <form action="{{ route('password.update') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="token" value="{{ $token }}">
+                                <input type="hidden" name="email" value="{{ $email }}">
+                                
+                                <!-- New Password -->
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="password" 
+                                           class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" 
+                                           id="newPassword" placeholder="Nouveau mot de passe" required>
+                                    <label for="newPassword">
+                                        <i class="fa-solid fa-lock me-2"></i>Nouveau mot de passe
+                                    </label>
+                                    <div class="position-absolute top-50 end-0 translate-middle-y me-3">
+                                        <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('newPassword', this)"></i>
+                                    </div>
+                                    @if($errors->has('password'))
+                                        <div class="invalid-feedback">{{ $errors->first('password') }}</div>
+                                    @endif
+                                </div>
+
+                                <!-- Confirm Password -->
+                                <div class="form-floating mb-4">
+                                    <input type="password" name="password_confirmation" 
+                                           class="form-control" id="confirmNewPassword" 
+                                           placeholder="Confirmez le mot de passe" required>
+                                    <label for="confirmNewPassword">
+                                        <i class="fa-solid fa-lock me-2"></i>Confirmez le mot de passe
+                                    </label>
+                                    <div class="position-absolute top-50 end-0 translate-middle-y me-3">
+                                        <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('confirmNewPassword', this)"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Password Requirements -->
+                                <div class="alert alert-info mb-4">
+                                    <small>
+                                        <i class="fa-solid fa-info-circle me-2"></i>
+                                        <strong>Exigences du mot de passe :</strong>
+                                        <ul class="mb-0 mt-2">
+                                            <li>Au moins 8 caractères</li>
+                                            <li>Contenir des lettres et des chiffres</li>
+                                            <li>Inclure au moins un caractère spécial</li>
+                                        </ul>
+                                    </small>
+                                </div>
+
+                                <div class="d-grid gap-2 mb-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa-solid fa-check me-2"></i>
+                                        Réinitialiser le mot de passe
+                                    </button>
+                                </div>
+
+                                <div class="text-center">
+                                    <a href="{{ route('form') }}" class="back-link">
+                                        <i class="fa-solid fa-arrow-left me-2"></i>
+                                        Retour à la page de connexion
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Security Note -->
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            <i class="fa-solid fa-shield-check me-1 text-success"></i>
+                            Votre mot de passe sera chiffré et stocké en toute sécurité.
+                        </small>
+                    </div>
                 </div>
-                @endif
-               
-                <!-- Formulaire de réinitialisation -->
-                <form id="resetPasswordForm" class="auth-form" action="{{ route('password.update') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="token" value="{{ $token }}">
-                    <input type="hidden" name="email" value="{{ $email }}">
-                    
-                    <div class="form-group">
-                        <label class="form-label">Nouveau mot de passe</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" name="password" id="newPassword" class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}" 
-                                   placeholder="Entrez votre nouveau mot de passe" required>
-                            <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('newPassword', this)"></i>
-                        </div>
-                        @if($errors->has('password'))
-                            <div class="error-feedback">{{ $errors->first('password') }}</div>
-                        @endif
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Confirmez le mot de passe</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" name="password_confirmation" id="confirmNewPassword" class="form-input" 
-                                   placeholder="Confirmez votre nouveau mot de passe" required>
-                            <i class="fa-solid fa-eye password-toggle" onclick="togglePassword('confirmNewPassword', this)"></i>
-                        </div>
-                    </div>
-     
-                    <button type="submit" class="submit-btn">Réinitialiser le mot de passe</button>
-                    
-                    <a href="{{ route('form') }}" class="back-link">Retour à la page de connexion</a>
-                </form>
             </div>
         </div>
     </div>
-
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Fonction pour basculer la visibilité du mot de passe
+        // Password visibility toggle
         function togglePassword(inputId, icon) {
             const input = document.getElementById(inputId);
             
@@ -336,6 +223,33 @@
                 icon.classList.add('fa-eye');
             }
         }
+
+        // Password strength indicator (optional enhancement)
+        document.getElementById('newPassword').addEventListener('input', function() {
+            const password = this.value;
+            const requirements = document.querySelectorAll('.alert-info li');
+            
+            // Check length
+            if (password.length >= 8) {
+                requirements[0].classList.add('text-success');
+            } else {
+                requirements[0].classList.remove('text-success');
+            }
+            
+            // Check letters and numbers
+            if (/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
+                requirements[1].classList.add('text-success');
+            } else {
+                requirements[1].classList.remove('text-success');
+            }
+            
+            // Check special characters
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                requirements[2].classList.add('text-success');
+            } else {
+                requirements[2].classList.remove('text-success');
+            }
+        });
     </script>
 
     @include('components.footer')

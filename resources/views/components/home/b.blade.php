@@ -139,7 +139,7 @@
             }
         }
     </style>
-<body>
+
     <section class="process-section">
         <div class="container">
             <!-- Header -->
@@ -225,5 +225,4 @@
         }
     </style>
 
-    <!-- Bootstrap JS -->
-</body>
+  
