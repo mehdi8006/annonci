@@ -240,7 +240,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Utilisateur</th>
-                                    <th>Email</th>
                                     <th class="text-center">Favoris</th>
                                 </tr>
                             </thead>
@@ -267,7 +266,6 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="text-muted small">{{ $user->email }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-danger">{{ $user->total_favorites }}</span>
                                     </td>
@@ -303,7 +301,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Utilisateur</th>
-                                    <th>Email</th>
                                     <th class="text-center">Annonces</th>
                                 </tr>
                             </thead>
@@ -330,7 +327,6 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="text-muted small">{{ $user->email }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-success">{{ $user->total_annonces }}</span>
                                     </td>
