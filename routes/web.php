@@ -15,6 +15,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', [HomeController::class, 'homeshow'])->name('homeshow');
+
 Route::get('/category/{category}', [HomeController::class, 'category'])->name('category');
 Route::get('/details/{id}', [HomeController::class, 'detailshow'])->name('details');
 

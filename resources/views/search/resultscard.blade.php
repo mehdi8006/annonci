@@ -1,347 +1,240 @@
-<div class="container2">
-    <div class="products-grid2">
+<div class="container-fluid px-3 px-md-4 py-4">
+    <div class="row g-3 g-md-4">
         @foreach($annonces as $annonce)
-    <a href="{{ route('details',['id' =>$annonce->id]) }}">
-
-            <div class="product-card2">
-                <div class="card-header2">
-                    <div class="user-section2">
-                        <div class="user-avatar2">
-                            <i class="fa-solid fa-user avatar-icon2"></i>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="{{ route('details',['id' =>$annonce->id]) }}" class="text-decoration-none">
+                <div class="card h-100 border-0 product-card">
+                    <!-- Card Header with User Info -->
+                    <div class="card-header bg-white border-0 py-3">
+                        <div class="d-flex align-items-center">
+                            @php
+                                $firstName = strtoupper(substr($annonce->utilisateur->nom, 0, 1));
+                                $colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'];
+                                $colorIndex = ord($firstName) % count($colors);
+                                $bgColor = $colors[$colorIndex];
+                                $textColor = '#FFFFFF';
+                            @endphp
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3 user-avatar" 
+                                 style="width: 40px; height: 40px; background-color: {{ $bgColor }}; color: {{ $textColor }};">
+                                <span class="fw-bold user-initial">{{ $firstName }}</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 fw-semibold text-dark user-name-text">{{ $annonce->utilisateur->nom }}</h6>
+                                <small class="text-muted d-flex align-items-center mt-1 date-text">
+                                    <i class="fa-solid fa-clock me-1 icon-small"></i>
+                                    {{ $annonce->date_publication->diffForHumans() }}
+                                </small>
+                            </div>
                         </div>
-                        <div class="user-details2">
-                            <span class="username2">{{ $annonce->utilisateur->nom }}</span>
-                            <span class="timestamp2">
-                                <i class="fa-solid fa-clock"></i>
-                                {{ $annonce->date_publication->diffForHumans() }}
+                    </div>
+
+                    <!-- Product Image -->
+                    <div class="position-relative overflow-hidden" style="height: 200px; border-radius: 10px;">
+                        @foreach($annonce->images as $image)
+                            @if($image->principale == 1)
+                                <img src="{{ asset('storage/' . $image->url) }}" 
+                                     alt="Image principale" 
+                                     class="w-100 h-100 object-fit-cover">
+                                @break
+                            @endif
+                        @endforeach
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <!-- Location -->
+                        <div class="d-flex align-items-center text-muted mb-2">
+                            <i class="fa-solid fa-location-dot me-2 icon-small"></i>
+                            <small class="location-text">{{ $annonce->sousCategorie ? $annonce->sousCategorie->nom : $annonce->categorie->nom }} dans {{ $annonce->ville->nom }}</small>
+                        </div>
+                        
+                        <!-- Product Title -->
+                        <h5 class="card-title fw-bold text-dark mb-3 lh-base product-title-text">
+                            {{ Str::limit($annonce->titre, 35) }}
+                        </h5>
+                        
+                        <!-- Price -->
+                        <div class="d-flex align-items-baseline mb-3">
+                            <span class="h5 fw-bold text-warning mb-0 price-text">{{ number_format($annonce->prix, 0, ',', ' ') }}</span>
+                            <span class="ms-1 text-dark fw-medium currency-text">DH</span>
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-light text-dark border d-flex align-items-center badge-text">
+                                <i class="fa-solid fa-tag me-1 icon-small"></i>
+                                {{ $annonce->categorie->nom }}
                             </span>
+                            @if($annonce->sousCategorie)
+                                <span class="badge bg-light text-dark border d-flex align-items-center badge-text">
+                                    <i class="fa-solid fa-tag me-1 icon-small"></i>
+                                    {{ $annonce->sousCategorie->nom }}
+                                </span>
+                            @endif
                         </div>
                     </div>
-                    <!-- Favorites section removed -->
                 </div>
-
-                <div class="product-image2" >
-                     @foreach($annonce->images as $image)
-                @if($image->principale == 1)
-                    <img src="{{ asset('storage/' . $image->url) }}" alt="Image principale">
-                    @break
-                @endif
-            @endforeach
-                </div>
-
-                <div class="product-details2">
-                    <div class="location2">
-                        <i class="fa-solid fa-location-dot"></i>
-                        {{ $annonce->sousCategorie ? $annonce->sousCategorie->nom : $annonce->categorie->nom }} dans {{ $annonce->ville->nom }}
-                    </div>
-                    
-                    <h2 class="product-title2"> {{ Str::limit($annonce->titre, 35) }} </h2>
-                    
-                    <div class="price2">
-                        {{ number_format($annonce->prix, 0, ',', ' ') }}<span class="currency2">DH</span>
-                    </div>
-
-                    <div class="categories2">
-                        <span class="category-tag2">
-                            <i class="fa-solid fa-tag"></i>
-                            {{ $annonce->categorie->nom }}
-                        </span>
-                        @if($annonce->sousCategorie)
-                            <span class="category-tag2">
-                                <i class="fa-solid fa-tag"></i>
-                                {{ $annonce->sousCategorie->nom }}
-                            </span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-    </a>
+            </a>
+        </div>
         @endforeach
     </div>
 </div>
 
 <style>
-    /* Base link styling */
-a {
-    text-decoration: none;
-    color: inherit;
+/* User Avatar Styles */
+.user-avatar {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Container principal */
-.container2 {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
+.user-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* Grille de produits */
-.products-grid2 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-start;
+.user-initial {
+    font-size: 0.9rem;
+    line-height: 1;
 }
 
-/* Style for anchor tags in products grid - NEW */
-.products-grid2 > a {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    width: calc(33.33% - 14px); /* Match the original product-card2 width */
-    transition: transform 0.3s ease; /* Move hover effect to the anchor */
+/* Text size reduction by 15% (multiply by 0.85) */
+.user-name-text {
+    font-size: 0.85rem !important; /* h6 default ~1rem, reduced to 0.85rem */
 }
 
-/* Maintain the hover effects on the anchor rather than default link behavior - NEW */
-.products-grid2 > a:hover {
-    text-decoration: none;
-    color: inherit;
-    transform: translateY(-5px); /* Move hover effect to the anchor */
+.date-text {
+    font-size: 0.723rem !important; /* small default ~0.85rem, reduced to ~0.723rem */
 }
 
-/* Style de base pour les cartes de produits */
-.product-card2 {
-    background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    width: 100%; /* Changed from calc(33.33% - 14px) to take full anchor width */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease; /* Keep only box-shadow transition here */
+.location-text {
+    font-size: 0.723rem !important; /* small default ~0.85rem, reduced to ~0.723rem */
 }
 
-/* Animation au survol de la carte - Modified */
-.product-card2:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    /* transform moved to the anchor tag */
+.product-title-text {
+    font-size: 0.85rem !important; /* Originally 1rem, reduced to 0.85rem */
 }
 
-/* En-tête de la carte */
-.card-header2 {
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #ffffff;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+.price-text {
+    font-size: 1.02rem !important; /* h5 default ~1.2rem, reduced to ~1.02rem */
 }
 
-/* Section utilisateur dans l'en-tête */
-.user-section2 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.currency-text {
+    font-size: 0.85rem !important; /* Regular text, reduced by 15% */
 }
 
-/* Avatar d'utilisateur */
-.user-avatar2 {
-    width: 40px;
-    height: 40px;
-    background-color: #e1e5eb;
-    background: linear-gradient(135deg, #e1e5eb, #d4d8e0);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    position: relative;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.badge-text {
+    font-size: 0.638rem !important; /* Originally 0.75rem, reduced to ~0.638rem */
+    padding: 0.34rem 0.68rem; /* Adjust padding proportionally */
 }
 
-/* Icône dans l'avatar */
-.avatar-icon2 {
-    font-size: 20px;
+.icon-small {
+    font-size: 0.638rem !important; /* Originally 0.75rem, reduced to ~0.638rem */
 }
 
-/* Détails de l'utilisateur */
-.user-details2 {
-    display: flex;
-    flex-direction: column;
+.product-card {
+    transition: all 0.3s ease;
+    border-radius: 0.75rem !important;
 }
 
-/* Nom d'utilisateur */
-.username2 {
-    font-weight: 600;
-    color: #111827;
-    font-size: 14px;
-    letter-spacing: -0.02em;
+.product-card:hover .card-title {
+    color: #f97316 !important;
 }
 
-/* Horodatage */
-.timestamp2 {
-    color: #888;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 2px;
+/* Remove link default styles */
+a.text-decoration-none:hover {
+    text-decoration: none !important;
 }
 
-.timestamp2 i {
-    font-size: 11px;
-    opacity: 0.7;
+/* Ensure images cover the container properly */
+.object-fit-cover {
+    object-fit: cover;
 }
 
-/* Image du produit */
-.product-image2 {
-    width: 100%;
-    height: 240px;
-    background-image: url('/api/placeholder/380/240');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Dégradé en bas de l'image */
-.product-image2::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1) 100%);
-    pointer-events: none;
-}
-
-/* Détails du produit */
-.product-details2 {
-    padding: 16px;
-}
-
-/* Localisation */
-.location2 {
-    color: #4b5563;
-    font-size: 13px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 400;
-}
-
-.location2 i {
-    font-size: 12px;
-    color: #9ca3af;
-}
-
-/* Titre du produit */
-.product-title2 {
-    font-size: 15px;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-    line-height: 1.3;
-}
-
-/* Prix */
-.price2 {
-    font-size: 20px;
-    font-weight: 700;
-    color: orange;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: baseline;
-    gap: 2px;
-}
-
-.price2 .currency2 {
-    color: black;
-    font-size: 18px;
-    margin-left: 2px;
+/* Custom badge styling */
+.badge {
     font-weight: 500;
+    border-radius: 1rem;
 }
 
-/* Conteneur de catégories */
-.categories2 {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+/* Enhanced card header */
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
 }
 
-/* Étiquettes de catégorie */
-.category-tag2 {
-    background-color: #f1f5f9;
-    color: #4b5563;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+/* Price styling enhancement */
+.text-warning {
+    color: #f59e0b !important;
 }
 
-.category-tag2:hover {
-    background-color: #e2e8f0;
-}
-
-.category-tag2 i {
-    font-size: 11px;
-    opacity: 0.8;
-}
-
-/* Responsive design pour différentes tailles d'écran */
-
-/* Écrans moyens (jusqu'à 1200px) - 2 cartes par ligne */
-@media (max-width: 1200px) {
-    .products-grid2 > a {
-        width: calc(50% - 10px);
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    .card-body {
+        padding: 1rem !important;
+    }
+    
+    .card-header {
+        padding: 0.75rem 1rem !important;
+    }
+    
+    /* Even smaller text on mobile for better fit */
+    .user-name-text {
+        font-size: 0.8rem !important;
+    }
+    
+    .product-title-text {
+        font-size: 0.8rem !important;
+    }
+    
+    .price-text {
+        font-size: 0.95rem !important;
+    }
+    
+    /* Adjust avatar size on mobile */
+    .user-avatar {
+        width: 35px !important;
+        height: 35px !important;
+    }
+    
+    .user-initial {
+        font-size: 0.8rem !important;
     }
 }
 
-/* Tablettes (jusqu'à 768px) - 1 carte par ligne */
-@media (max-width: 768px) {
-    .products-grid2 > a {
-        width: 100%;
+/* Additional color variations for more users */
+@media (prefers-color-scheme: dark) {
+    .user-avatar {
+        box-shadow: 0 2px 4px rgba(255,255,255,0.1);
     }
-}
-
-/* Petits mobiles (jusqu'à 480px) */
-@media (max-width: 480px) {
-    .container2 {
-        padding: 10px;
-    }
-
-    .card-header2 {
-        padding: 10px 12px;
-    }
-
-    .user-avatar2 {
-        width: 36px;
-        height: 36px;
-    }
-
-    .user-details2 .username2 {
-        font-size: 13px;
-    }
-
-    .timestamp2 {
-        font-size: 11px;
-    }
-
-    .product-details2 {
-        padding: 12px;
-    }
-
-    .product-title2 {
-        font-size: 15px;
-    }
-
-    .price2 {
-        font-size: 22px;
-    }
-
-    .price2 .currency2 {
-        font-size: 16px;
+    
+    .user-avatar:hover {
+        box-shadow: 0 4px 8px rgba(255,255,255,0.15);
     }
 }
 </style>
 
 <script>
-    // JavaScript related to favorites has been removed
-    document.addEventListener('DOMContentLoaded', function() {
-        // Any remaining non-favorite related functionality can go here
+document.addEventListener('DOMContentLoaded', function() {
+    // Add any additional functionality here
+    console.log('Product listing loaded with user avatar initials');
+    
+    // Optional: Add click animation to avatars
+    const avatars = document.querySelectorAll('.user-avatar');
+    avatars.forEach(avatar => {
+        avatar.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            }, 150);
+        });
     });
+});
 </script>
