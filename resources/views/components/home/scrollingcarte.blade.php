@@ -11,7 +11,7 @@
         -ms-overflow-style: none;
     }
     .e{
-        padding: 0px 70px ;
+        padding: 0 2rem ;
     }
     .horizontal-scroll::-webkit-scrollbar {
         display: none;
@@ -80,6 +80,12 @@
             height: 300px;
         }
     }
+    @media (max-width: 576px) {
+    .e {
+        padding: 0 0.25rem;
+    }
+}
+
 </style>
 <div class="e">
 <!-- Section Title -->
