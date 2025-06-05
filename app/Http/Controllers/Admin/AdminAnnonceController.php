@@ -38,7 +38,7 @@ class AdminAnnonceController extends Controller
         
         // Apply sorting
         $sortField = $request->get('sort', 'created_at');
-        $sortDirection = $request->get('direction', 'asc'); // Changed to asc for recent first
+        $sortDirection = $request->get('direction', 'desc'); // Changed to asc for recent first
         
         if ($sortField === 'reports_count') {
             $query->withCount('reports')
