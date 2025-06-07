@@ -11,8 +11,10 @@ use App\Http\Controllers\ReportController;
 // PUBLIC ROUTES - No authentication required
 // ============================================================================
 
-
-Route::get('/', [HomeController::class, 'homeshow'])->name('homeshow');
+Route::get('/', function () {
+    return redirect('/home');
+});
+Route::get('/home', [HomeController::class, 'homeshow'])->name('homeshow');
 
 Route::get('/category/{category}', [HomeController::class, 'category'])->name('category');
 Route::get('/details/{id}', [HomeController::class, 'detailshow'])->name('details');
